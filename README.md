@@ -39,12 +39,12 @@
 Welcome to **POLLUX** 
 – an open benchmark of 1,300 generative tasks in Russian. It includes a family of LLM-based judges specifically designed to automate the evaluation of model outputs across a wide range of tasks.
 
-🧭 Navigate the benchmark sections and tasks on the [project page](ai-forever-pollux.githubpages.io).
+↗ 🧭 Navigate the benchmark sections and tasks on the [project page](ai-forever-pollux.githubpages.io).
 
-📚 See [Hugging Face collection](https://huggingface.co/collections/ai-forever/pollux) for the dataset and the models.
+↗ 🤗 See [Hugging Face collection](https://huggingface.co/collections/ai-forever/pollux) for the dataset and the models.
 
 
-## <img src="./images/logo_pollux_raw_light.svg" width="20" /> POLLUX features
+## <img src="./images/logo_pollux_min_light.svg" width="20" /> POLLUX features
 
 - 📚 **1,300 diverse tasks**: Covering open-ended generation, text-to-text transformation, information-seeking, and code-related prompts. The task taxonomy is grounded in [analysis of real-world user queries](clustering_demo.ipynb).
 
@@ -57,7 +57,7 @@ Welcome to **POLLUX**
 - 🤖 **LLM-based evaluators**: A suite of judge models (7B and 32B) trained to assess responses against specific criteria and generate score justifications. **Supports custom criteria and evaluation scales via flexible input formatting (beta).**
 
 
-## 🧑‍🔬 Quickstart
+## 🚀 Quickstart
 
 Score model outputs with POLLUX judges: [pollux_inference.ipynb](pollux_inference.ipynb)
 
