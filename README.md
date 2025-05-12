@@ -2,7 +2,7 @@
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="./images/logo_pollux_square_light.svg">
     <source media="(prefers-color-scheme: light)" srcset="./images/logo_pollux_square_dark.svg">
-    <img alt="SAGE" src="./images/logo_pollux_square_light.svg" style="max-width: 25%;">
+    <img alt="SAGE" src="./images/logo_pollux_square_light.svg" width="150"">
   </picture>
 </p>
 
