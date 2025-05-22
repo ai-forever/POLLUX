@@ -2,7 +2,7 @@
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="./images/logo_pollux_square_light.svg">
     <source media="(prefers-color-scheme: light)" srcset="./images/logo_pollux_square_dark.svg">
-    <img alt="SAGE" src="./images/logo_pollux_square_light.svg" width="150"">
+    <img alt="POLLUX" src="./images/logo_pollux_square_light.svg" width="150">
   </picture>
 </p>
 
@@ -69,9 +69,10 @@ pollux/
 ├── images/                 # project logo
 ├── bench_meta/             # benchmark metadata
 ├── clustering_demo.ipynb   # user logs analysis
-├── evaluation.py/          # reproduce evaluation
+├── src/                    # inference tools
+├── src/inference.py        # reproduce evaluation
 ├── LICENSE                 # license
-└── pollux_inference.ipynb  # inference demo
+└── demo.ipynb              # inference demo
 ```
 
 
