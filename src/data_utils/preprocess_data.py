@@ -21,10 +21,10 @@ def clean_reference(ref_text):
     return ref_text
 
 
-def format_prompt(example: dict, template: str = "./prompt_template.yaml", augment=False) -> str:
+def format_prompt(example: dict, template: str = "./prompt_template.yaml") -> str:
     if isinstance(template, str):
-        with open(template) as rf:
-            template = yaml.safe_load(rf)
+        with open(template, encoding='utf8') as f:
+            template = yaml.safe_load(f)
     
     def get_nested(d: dict, key_path: str, default=""):
         keys = key_path.split(".")
@@ -51,10 +51,7 @@ def format_prompt(example: dict, template: str = "./prompt_template.yaml", augme
                     values[ph] = clean_problem(values[ph])
                 elif ph == "true_answer":
                     if values[ph] is not None:
-                        if (not augment) or (augment and random.random() < 0.5):
-                            values[ph] = clean_reference(values[ph])
-                        else: 
-                            values[ph] = ''
+                        values[ph] = clean_reference(values[ph])
                     else:
                         values[ph] = ''
             if all(v is not None for v in values.values()):
@@ -107,7 +104,6 @@ def tokenize_with_chat_template(batch, tokenizer):
         formatted = tokenizer.apply_chat_template(
             messages,
             add_generation_prompt=False,
-            # do not add tokens that indicate the start of a bot response. e.g. "<|im_start|>assistant"
             return_tensors="pt",
             tokenize=False,
         )
@@ -116,7 +112,7 @@ def tokenize_with_chat_template(batch, tokenizer):
                           padding="do_not_pad",
                           truncation=False,
                           max_length=None,
-                          add_special_tokens=False)  # special tokens already added in chat template
+                          add_special_tokens=False)
     return {
         "input_ids": tokenized["input_ids"],
         "attention_mask": tokenized["attention_mask"],
@@ -154,12 +150,10 @@ def fix_score_format(score_text, strict_pattern="^\[FEEDBACK\] ([\s\S]*?) \[RESU
     try:
         float_score = float(score_part)
     except:
-        # print(f"Cannot parse float from '{score_part}'")
-        # print(f"Score text: '{score_text[-50:]}'")
         return ""
     formatted_text = score_text_only.strip("\n ") + " [RESULT] " + score_part + " [END]"
     if re.search(strict_pattern, formatted_text, re.DOTALL) is not None:
-        return formatted_text#.split('[RESULT]')[0] + "[END]"
+        return formatted_text
     return ""
 
 def clean_score_for_regression(score_text):
@@ -192,7 +186,7 @@ def process_dataset(raw_data_path, task_type):
         ds = ds.map(lambda example: {"score": clean_score_for_regression(example["score"])}, num_proc=16)
 
     print("Formatting prompts...")
-    ds = ds.map(lambda example: {"prompt": format_prompt(example, prompt_template, augment=True)}, num_proc=16)
+    ds = ds.map(lambda example: {"prompt": format_prompt(example, prompt_template)}, num_proc=16)
 
     print("Running tokenization...")
     tokenizer = AutoTokenizer.from_pretrained(args.tok_path,
@@ -240,7 +234,6 @@ if __name__ == "__main__":
     print("\n\n===== TRAIN DATA =====\n")
 
     ds = process_dataset(args.raw_data_train, args.task_type)
-    #ds = ds.select_columns(["input_ids", "attention_mask"])
 
     print("\n\n===== EVALUATION DATA =====\n")
     if args.raw_data_eval is None:
@@ -254,7 +247,6 @@ if __name__ == "__main__":
                              'Написать художественный текст', 'Стайл-трансфер', 'Придумать вопрос к тексту', 'Изменить код']
             ds_test = ds.filter(lambda sample: sample["problem_type_new"] in test_problems, num_proc=16)
             ds = ds.filter(lambda sample: sample["problem_type_new"] not in test_problems, num_proc=16)
-            #ds = ds.train_test_split(test_size=args.test_size, seed=args.train_test_split_seed)
             ds = datasets.DatasetDict({'train': ds, 'test': ds_test})
         else:
             print("Will return train split only (since `train_test_split = False`).")
@@ -263,7 +255,6 @@ if __name__ == "__main__":
         ds = datasets.DatasetDict({"train": ds})
         ds["test"] = process_dataset(args.raw_data_eval, args.task_type)
 
-    # Save dataset
     ds["train"].save_to_disk(args.output_dir_train)
     ds["test"].save_to_disk(args.output_dir_eval)
     print(f"Final train dataset ({len(ds['train'])} samples) saved to `{args.output_dir_train}`.")
