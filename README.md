@@ -28,9 +28,9 @@
 
 <div align="center">
   <h4>
-    <a href="./pollux_inference.ipynb">Demo code</a> |
+    <a href="./demo.ipynb">Demo code</a> |
     <a href="https://huggingface.co/collections/ai-forever/pollux-68418d171bb9a4ac1e62b424">Models & Dataset</a> |
-    <a href="#llm-evaluation-results">Evaluation</a> |
+    <a href="ai-forever-pollux.githubpages.io">Benchmark demo</a> |
     <a href="#citation">Publications</a>
   </h4>
 </div>
@@ -39,7 +39,7 @@
 Welcome to **POLLUX** 
 – an open-source project dedicated to evaluating the generative capabilities of modern large language models (LLMs) in Russian.
 
-Our comprehensive evaluation framework is built on three foundational pillars. First, we provide carefully developed taxonomies that systematically categorize both generative tasks and evaluation criteria. Second, our meticulously crafted benchmark comprises 2,100 unique, manually created instructions paired with nearly 472,000 detailed point-based criteria assessments. Finally, POLLUX features a specialized family of LLM-based judges that automate the evaluation process, enabling scalable and systematic assessment of model outputs across all task categories.
+Our comprehensive evaluation framework is built on three foundational pillars. First, we provide carefully developed **taxonomies** that systematically categorize both generative tasks and evaluation criteria. Second, our meticulously crafted **benchmark** comprises 2,100 unique, manually created instructions paired with nearly 472,000 detailed point-based criteria assessments. Finally, POLLUX features a specialized **family of LLM-based judges** that automate the evaluation process, enabling scalable and systematic assessment of model outputs across all task categories.
 
 ↗ 🧭 Explore the benchmark on the [project page](ai-forever-pollux.githubpages.io).
 
@@ -61,7 +61,9 @@ Our comprehensive evaluation framework is built on three foundational pillars. F
 
 ## 🚀 Quickstart
 
-Score model outputs with POLLUX judges: [pollux_inference.ipynb](pollux_inference.ipynb)
+Score model outputs with POLLUX judges: [demo.ipynb](demo.ipynb)
+
+To reproduce the evaluation results, please refer to the [evaluation.py](evaluation.py) file.
 
 
 ## 📂 Repository Structure
@@ -79,9 +81,10 @@ pollux/
 
 ## 📊 Benchmark
 
+The POLLUX benchmark is grounded in taxonomies of generative tasks and criteria. Taxonomy of generative tasks covers 35 general tasks groups that spans two additional hierarchy level (functional styles / substyles and  genres accordingly) and 152 tasks. Taxonomy of evaluation criteria includes five overwhelming categories of criteria that assess general syntactic, lexical and semantic properties of text (General and Critical categories), properties associated with a specialized functional style and task markers (Domain- and Task-specific criteria) and even subjective opinions (Subjective category of criteria). 
 
+The benchmark includes 2100 unique instructions distributed evenly over 35 tasks groups covering additional three complexity levels (for each task group). Each instruction is accompanied with answer of 7 top-tier LLMs including OpenAI o1 and GPT-4o, Claude 3.5 Sonnet, Llama 405B etc (11,500 answers in total). Each answer is evaluated against a set of criteria that is composed from Critical, Subjective and General criteria alongside relevant Domain- and Task-specific criteria. Each criteria has an overlap of at least two experts. This results in more than 471,000 point criteria estimates 
 
-To reproduce the evaluation results, please refer to the [evaluation.py](evaluation.py) file.
 
 
 ## ⚖️ Judges
