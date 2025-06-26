@@ -1,12 +1,14 @@
 import os
 import re
+import yaml
+import random
 import argparse
 from collections import Counter
-import random
-import yaml
+
 import datasets
 import pandas as pd
 from transformers import AutoTokenizer
+
 random.seed(42)
 
 
@@ -64,20 +66,20 @@ def format_prompt(example: dict, template: str = "./prompt_template.yaml") -> st
 
 
 def detect_language(text):
-    words = re.findall(r'\b\w+\b', text)
-    ru_pattern = re.compile(r'[а-яА-Я]')
-    en_pattern = re.compile(r'[a-zA-Z]')
+    words = re.findall(r"\b\w+\b", text)
+    ru_pattern = re.compile(r"[а-яА-Я]")
+    en_pattern = re.compile(r"[a-zA-Z]")
 
     lang_counts = Counter()
     for word in words:
         if ru_pattern.search(word):
-            lang_counts['ru'] += 1
+            lang_counts["ru"] += 1
         elif en_pattern.search(word):
-            lang_counts['en'] += 1
+            lang_counts["en"] += 1
 
     if lang_counts:
         return lang_counts.most_common(1)[0][0]
-    return 'unknown'
+    return "unknown"
 
 
 def extract_score(text):
@@ -148,6 +150,7 @@ def fix_score_format(score_text, strict_pattern="^\[FEEDBACK\] ([\s\S]*?) \[RESU
     if re.search(strict_pattern, formatted_text, re.DOTALL) is not None:
         return formatted_text
     return ""
+
 
 def clean_score_for_regression(score_text):
     return score_text.split('[RESULT]')[0] + "[END]"

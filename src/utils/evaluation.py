@@ -1,8 +1,9 @@
+import re
 from collections import defaultdict
 
-from transformers import EvalPrediction, StoppingCriteria
-import re
 import numpy as np
+from transformers import EvalPrediction, StoppingCriteria
+
 
 class StopOnSubstring(StoppingCriteria):
     def __init__(self, tokenizer, stop_text):
@@ -12,6 +13,7 @@ class StopOnSubstring(StoppingCriteria):
     def __call__(self, input_ids, scores, **kwargs):
         decoded_text = self.tokenizer.decode(input_ids[0], skip_special_tokens=True)
         return decoded_text.endswith(self.stop_text)
+
 
 class TextEvaluator:
     @staticmethod
@@ -84,6 +86,7 @@ class TextEvaluator:
 
         return metrics
 
+
 class LossMetric:
     def __init__(self):
         self.loss = 0
@@ -95,7 +98,6 @@ class LossMetric:
 
     def compute(self):
         return {"eval_loss": self.loss / self.n}
-
 
 
 class PolluxMetric:
@@ -128,6 +130,4 @@ class PolluxMetric:
 
     @property
     def texts(self):
-        return {'true': self.true_texts, 'pred': self.pred_texts}
-
-
+        return {"true": self.true_texts, "pred": self.pred_texts}

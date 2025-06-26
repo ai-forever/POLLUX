@@ -39,7 +39,7 @@
 Welcome to **POLLUX** 
 – an open-source project dedicated to evaluating the generative capabilities of modern large language models (LLMs) in Russian.
 
-Our comprehensive evaluation framework is built on three foundational pillars. First, we provide carefully developed **taxonomies** that systematically categorize both generative tasks and evaluation criteria. Second, our meticulously crafted **benchmark** comprises 2,100 unique, manually created instructions paired with nearly 472,000 detailed point-based criteria assessments. Finally, POLLUX features a specialized **family of LLM-based judges** that automate the evaluation process, enabling scalable and systematic assessment of model outputs across all task categories.
+Our comprehensive evaluation framework is built on three foundational pillars. First, we provide carefully developed 📊 **taxonomies** that systematically categorize both generative tasks and evaluation criteria. Second, our meticulously crafted 🌟 **benchmark** comprises 2,100 unique, manually created instructions paired with 471,515 detailed point criteria assessments. Finally, POLLUX features a specialized ⚖️ **family of LLM-based judges** that automate the evaluation process, enabling scalable and systematic assessment of model outputs across all task categories.
 
 ↗ 🧭 Explore the benchmark on the [project page](ai-forever-pollux.githubpages.io).
 
@@ -84,11 +84,41 @@ pollux/
 └── demo.ipynb              # inference demo
 ```
 
-## 📊 Benchmark
+## 🌟 Benchmark
 
-The POLLUX benchmark is grounded in taxonomies of generative tasks and criteria. Taxonomy of generative tasks covers 35 general tasks groups that spans two additional hierarchy level (functional styles / substyles and  genres accordingly) and 152 tasks. Taxonomy of evaluation criteria includes five overwhelming categories of criteria that assess general syntactic, lexical and semantic properties of text (General and Critical categories), properties associated with a specialized functional style and task markers (Domain- and Task-specific criteria) and even subjective opinions (Subjective category of criteria). 
+The POLLUX benchmark is built upon comprehensive taxonomies of generative tasks and evaluation criteria. Our taxonomy of generative tasks encompasses 35 general task groups organized across two hierarchical levels (functional styles/substyles and genres), covering a total of 152 distinct tasks. 📊
 
-The benchmark includes 2100 unique instructions distributed evenly over 35 tasks groups covering additional three complexity levels (for each task group). Each instruction is accompanied with answer of 7 top-tier LLMs including OpenAI o1 and GPT-4o, Claude 3.5 Sonnet, Llama 405B etc (11,500 answers in total). Each answer is evaluated against a set of criteria that is composed from Critical, Subjective and General criteria alongside relevant Domain- and Task-specific criteria. Each criteria has an overlap of at least two experts. This results in more than 471,000 point criteria estimates 
+Our taxonomy of evaluation criteria features five comprehensive categories that assess:
+- 🔍 General & Critical: Core syntactic, lexical, and semantic text properties
+- 🎯 Domain-specific: Properties tied to specialized functional styles  
+- ✅ Task-specific: Task-oriented markers and requirements
+- 💭 Subjective: Human preferences and subjective opinions
+
+▎📈 Benchmark Scale & Coverage
+
+The benchmark contains 2,100 unique instructions evenly distributed across all 35 task groups, with three complexity levels per group. Each instruction includes responses from 7 top-tier LLMs:
+- 🤖 OpenAI o1 & GPT-4o
+- 🧠 Claude 3.5 Sonnet  
+- 🦙 Llama 405B
+- ⚡️ T-pro-it-1.0
+- 🔍 YandexGPT 4 Pro
+- 💎 GigaChat Max
+
+This results in 11,500 total responses across the benchmark! 🚀
+
+▎🔬 Expert Evaluation Process
+
+Every response is scrupulously evaluated using a tailored criteria set combining:
+- Critical, Subjective, and General criteria
+- Relevant Domain- and Task-specific criteria
+
+With at least two expert evaluators per criterion, we've collected:
+- 471,000+ individual criteria estimates with textual rationales ✍️
+- 161,076 aggregate (over overlap) numerical scores 📊
+
+▎🌐 Access & Exploration
+
+Ready to dive in? Access the benchmark on its [home page](https://huggingface.co/datasets/ai-forever/POLLUX) and explore the data through our interactive demo! 🎮 
 
 
 
@@ -114,6 +144,15 @@ This project is licensed under the MIT License. See [LICENSE](LICENSE) for detai
 If you use POLLUX in your research, please cite the following paper:
 
 ```bibtex
+@misc{martynov2025eyejudgementdissectingevaluation,
+      title={Eye of Judgement: Dissecting the Evaluation of Russian-speaking LLMs with POLLUX}, 
+      author={Nikita Martynov and Anastasia Mordasheva and Dmitriy Gorbetskiy and Danil Astafurov and Ulyana Isaeva and Elina Basyrova and Sergey Skachkov and Victoria Berestova and Nikolay Ivanov and Valeriia Zanina and Alena Fenogenova},
+      year={2025},
+      eprint={2505.24616},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2505.24616}, 
+}
 ```
 
 ---

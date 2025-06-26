@@ -1,16 +1,19 @@
+import itertools
+
 import torch
 import torch.nn as nn
-from vllm.model_executor.models.interfaces import SupportsLoRA, SupportsPP
-from vllm.model_executor.models.utils import WeightsMapper, maybe_prefix
+from vllm.config import VllmConfig
+from vllm.logger import init_logger
 from vllm.model_executor.models.qwen2 import Qwen2Model
 from vllm.model_executor.layers.pooler import Pooler, PoolingType
-from vllm.config import VllmConfig
 from vllm.sequence import PoolerOutput, PoolingSequenceGroupOutput
-from vllm.logger import init_logger
-import itertools
+from vllm.model_executor.models.utils import WeightsMapper, maybe_prefix
+from vllm.model_executor.models.interfaces import SupportsLoRA, SupportsPP
 from vllm.model_executor.model_loader.weight_utils import default_weight_loader
 
+
 logger = init_logger(__name__)
+
 
 class Qwen2WithRegressionHead(nn.Module, SupportsLoRA, SupportsPP):
     packed_modules_mapping = {
@@ -83,3 +86,4 @@ class Qwen2WithRegressionHead(nn.Module, SupportsLoRA, SupportsPP):
                 weight_loader = getattr(param, "weight_loader",
                                         default_weight_loader)
                 weight_loader(param, loaded_weight)
+                
