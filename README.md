@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-    <a href="https://huggingface.co/collections/ai-forever/pollux">
+    <a href="https://huggingface.co/collections/ai-forever/pollux-68418d171bb9a4ac1e62b424">
     <img alt="HuggingFace" src="https://img.shields.io/badge/HuggingFace-Collection-orange?logo=Hugging%20Face">
     </a>
     <a href="https://opensource.org/licenses/MIT">
@@ -16,43 +16,45 @@
     <a href="https://github.com/ai-forever/pollux/releases">
     <img alt="Release" src="https://badgen.net/badge/release/v1.0.0/">
     </a>
-    <a href="https://arxiv.org/abs/2505.00000">
+    <a href="https://arxiv.org/pdf/2505.24616">
     <img alt="Paper" src="https://img.shields.io/badge/arXiv-2505.00000-red">
     </a>
 </p>
 
 
 <h2 align="center">
-    <p>A benchmark of LLM generative tasks in Russian.<br>And a family of LM-judges.</p>
+    <p>Evaluating the Generative Capabilities of LLMs in Russian.<br>Benchmark and a family of LM-as-a-Judge models.</p>
 </h2>
 
 <div align="center">
   <h4>
     <a href="./pollux_inference.ipynb">Demo code</a> |
-    <a href="https://huggingface.co/collections/ai-forever/pollux">Models & Dataset</a> |
-    <a href="#-model-evaluation-results">Evaluation</a> |
+    <a href="https://huggingface.co/collections/ai-forever/pollux-68418d171bb9a4ac1e62b424">Models & Dataset</a> |
+    <a href="#llm-evaluation-results">Evaluation</a> |
     <a href="#citation">Publications</a>
   </h4>
 </div>
 
 
 Welcome to **POLLUX** 
-– an open benchmark of 1,300 generative tasks in Russian. It includes a family of LLM-based judges specifically designed to automate the evaluation of model outputs across a wide range of tasks.
+– an open-source project dedicated to evaluating the generative capabilities of modern large language models (LLMs) in Russian.
 
-↗ 🧭 Navigate the benchmark sections and tasks on the [project page](ai-forever-pollux.githubpages.io).
+Our comprehensive evaluation framework is built on three foundational pillars. First, we provide carefully developed taxonomies that systematically categorize both generative tasks and evaluation criteria. Second, our meticulously crafted benchmark comprises 2,100 unique, manually created instructions paired with nearly 472,000 detailed point-based criteria assessments. Finally, POLLUX features a specialized family of LLM-based judges that automate the evaluation process, enabling scalable and systematic assessment of model outputs across all task categories.
 
-↗ 🤗 See [Hugging Face collection](https://huggingface.co/collections/ai-forever/pollux) for the dataset and the models.
+↗ 🧭 Explore the benchmark on the [project page](ai-forever-pollux.githubpages.io).
+
+↗ 🤗 See [Hugging Face collection](https://huggingface.co/collections/ai-forever/pollux-68418d171bb9a4ac1e62b424) for the dataset and the models.
 
 
 ## <img src="./images/logo_pollux_min_light.svg" width="20" /> POLLUX features
 
-- 📚 **1,300 diverse tasks**: Covering open-ended generation, text-to-text transformation, information-seeking, and code-related prompts. The task taxonomy is grounded in [analysis of real-world user queries](clustering_demo.ipynb).
+- 📚 **152 diverse tasks**: Covering open-ended generation, text-to-text transformation, information-seeking, and code-related prompts. The task taxonomy is grounded in [analysis of real-world user queries](clustering_demo.ipynb).
 
-- 🌡️ **47 evaluation criteria**: A rich set of non-overlapping fine-grained metrics — ranging from surface-level quality (e.g. absence of artifacts) to higher-level abilities like reasoning and creativity. Each criterion comes with a clearly defined evaluation scale.
+- 🌡️ **66 unique evaluation criteria**: A rich set of non-overlapping fine-grained metrics — ranging from surface-level quality (e.g. absence of artifacts) to higher-level abilities like reasoning and creativity. Each criterion comes with a clearly defined evaluation scale.
 
 - 📊 **Three difficulty levels**: Tasks are organized into easy, medium, and hard tiers to support targeted model diagnostics.
 
-- 👩🏼‍🎓 **Expert-curated tasks**: All tasks and criteria are designed from scratch by domain experts to ensure quality and relevance.
+- 👩🏼‍🎓 **Expert-curated tasks**: All tasks and criteria are designed from scratch by domain experts to ensure quality and relevance. All instructions and criteria annotations are similarly developed and reviewed by experts panels to maintain consistent standards throughout the evaluation process.
 
 - 🤖 **LLM-based evaluators**: A suite of judge models (7B and 32B) trained to assess responses against specific criteria and generate score justifications. **Supports custom criteria and evaluation scales via flexible input formatting (beta).**
 
@@ -75,6 +77,12 @@ pollux/
 └── demo.ipynb              # inference demo
 ```
 
+## 📊 Benchmark
+
+
+
+To reproduce the evaluation results, please refer to the [evaluation.py](evaluation.py) file.
+
 
 ## ⚖️ Judges
 
@@ -88,12 +96,6 @@ There are two architecture types in both sizes:
 - **seq2seq**: A sequence-to-sequence model that generates a score and its justification in a decoder-only manner as a joint text output.
 - **regression** (*-r* in HF model identifiers): A regression model that outputs a numeric score from an added regression head and generates the score justification in a decoder-only manner.
 
-
-## 📊 LLM evaluation results
-
-See project leaderboard for the evaluation of LLMs on POLLUX tasks: [Leaderboard](https://ai-forever.github.io/pollux/leaderboard.html).
-
-To reproduce the evaluation results, please refer to the [evaluation.py](evaluation.py) file.
 
 
 ## 🔒 License
