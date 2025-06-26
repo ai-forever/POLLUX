@@ -87,13 +87,6 @@ def extract_score(text):
     else:
         return None
 
-
-def extract_score_rubrics(rubrics_text):
-    rubrics_text = res.group(0)
-    rubrics = [re.split("(?<=\d)(:| —) ", r) for r in re.split("\n\n(?=\d)", rubrics_text)]
-    return rubrics
-
-
 def tokenize_with_chat_template(batch, tokenizer):
     formatted_texts = []
     for prompt, score in zip(batch["prompt"], batch["score"]):
