@@ -65,9 +65,9 @@ Score model outputs with POLLUX judges: [demo.ipynb](demo.ipynb)
 
 To reproduce the evaluation results, please refer to the [src/inference.py](src/inference.py) file.
 
-```python .\src\inference.py --test_path ai-forever/POLLUX --template_path src/data_utils\test_prompt_template_ru.yaml --num_proc 1 inference_offline_vllm --model_path ai-forever/pollux-judge-7b --tokenizer_path ai-forever/pollux-judge-7b --tensor_parallel_size 1 --answer_path pollux_judge_7b.json```
+```python ./src/inference.py --test_path ai-forever/POLLUX --template_path src/data_utils/test_prompt_template_ru.yaml --num_proc 1 inference_offline_vllm --model_path ai-forever/pollux-judge-7b --tokenizer_path ai-forever/pollux-judge-7b --tensor_parallel_size 1 --answer_path pollux_judge_7b.json```
 
-```python .\src\inference.py --test_path ai-forever/POLLUX --template_path src/data_utils\test_prompt_template_ru.yaml --num_proc 1 compute_metrics --answer_path logs/pollux_judge_7b.json```
+```python ./src/inference.py --test_path ai-forever/POLLUX --template_path src/data_utils/test_prompt_template_ru.yaml --num_proc 1 compute_metrics --answer_path logs/pollux_judge_7b.json```
 
 
 
