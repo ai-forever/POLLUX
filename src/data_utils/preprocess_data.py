@@ -27,7 +27,7 @@ def format_prompt(example: dict, template: str = "./prompt_template.yaml") -> st
     if isinstance(template, str):
         with open(template, encoding='utf8') as f:
             template = yaml.safe_load(f)
-    
+
     def get_nested(d: dict, key_path: str, default=""):
         keys = key_path.split(".")
         for key in keys:
@@ -88,6 +88,7 @@ def extract_score(text):
         return float(res.group(0).strip())
     else:
         return None
+
 
 def tokenize_with_chat_template(batch, tokenizer):
     formatted_texts = []
@@ -156,7 +157,7 @@ def clean_score_for_regression(score_text):
     return score_text.split('[RESULT]')[0] + "[END]"
 
 
-def process_dataset(raw_data_path, task_type):
+def process_dataset(raw_data_path, task_type, prompt_template, tokenizer_path, batch_size, max_length):
     print("Reading and filtering raw data...")
     ds = datasets.load_from_disk(raw_data_path)
     print(f"Found {len(ds)} raw samples.")
@@ -185,21 +186,21 @@ def process_dataset(raw_data_path, task_type):
     ds = ds.map(lambda example: {"prompt": format_prompt(example, prompt_template)}, num_proc=16)
 
     print("Running tokenization...")
-    tokenizer = AutoTokenizer.from_pretrained(args.tok_path,
+    tokenizer = AutoTokenizer.from_pretrained(tokenizer_path,
                                               pad_token='<|eot_id|>',
                                               cache_dir='./model_cache',
                                               padding=None)
     ds = ds.map(lambda batch: tokenize_with_chat_template(batch, tokenizer), batched=True,
-                batch_size=args.tok_batch_size, num_proc=16)
+                batch_size=batch_size, num_proc=16)
 
     print("Filtering dataset by sample length...")
-    ds = ds.filter(lambda example: len(example["input_ids"]) <= args.max_sample_tokens, num_proc=16)
-    print(f"Done. Kept {len(ds)} samples with the number of tokens <= {args.max_sample_tokens}.")
+    ds = ds.filter(lambda example: len(example["input_ids"]) <= max_length, num_proc=16)
+    print(f"Done. Kept {len(ds)} samples with the number of tokens <= {max_length}.")
 
     return ds
 
 
-if __name__ == "__main__":
+def main():  # if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--raw_data_train', type=str)
@@ -229,7 +230,8 @@ if __name__ == "__main__":
 
     print("\n\n===== TRAIN DATA =====\n")
 
-    ds = process_dataset(args.raw_data_train, args.task_type)
+    ds = process_dataset(args.raw_data_train, args.task_type, prompt_template, args.tok_path, args.tok_batch_size,
+                         args.max_sample_tokens)
 
     print("\n\n===== EVALUATION DATA =====\n")
     if args.raw_data_eval is None:
@@ -240,7 +242,8 @@ if __name__ == "__main__":
                              'ИИ как персонаж (экспертная ситуация)',
                              'Прикладной брейншторминг',
                              'Дать рекомендации',
-                             'Написать художественный текст', 'Стайл-трансфер', 'Придумать вопрос к тексту', 'Изменить код']
+                             'Написать художественный текст', 'Стайл-трансфер', 'Придумать вопрос к тексту',
+                             'Изменить код']
             ds_test = ds.filter(lambda sample: sample["problem_type_new"] in test_problems, num_proc=16)
             ds = ds.filter(lambda sample: sample["problem_type_new"] not in test_problems, num_proc=16)
             ds = datasets.DatasetDict({'train': ds, 'test': ds_test})
@@ -249,7 +252,8 @@ if __name__ == "__main__":
             ds = datasets.DatasetDict({"train": ds})
     else:
         ds = datasets.DatasetDict({"train": ds})
-        ds["test"] = process_dataset(args.raw_data_eval, args.task_type)
+        ds["test"] = process_dataset(args.raw_data_eval, args.task_type, prompt_template, args.tok_path,
+                                     args.tok_batch_size, args.max_sample_tokens)
 
     ds["train"].save_to_disk(args.output_dir_train)
     ds["test"].save_to_disk(args.output_dir_eval)
