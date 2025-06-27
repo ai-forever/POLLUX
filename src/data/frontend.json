@@ -1,0 +1,450 @@
+{
+  "task_specific": {
+    "task1": {
+      "subtask1": {
+        "count": 6,
+        "text": "text sub1",
+        "subsubtask1": {
+          "count": 6,
+          "text": "test text",
+          "examples": [
+            {
+              "question": "subsub1q",
+              "option": "subsub1o",
+              "subject": "subsub1s",
+              "difficulty": "subsub1d"
+            }
+          ]
+        },
+        "subsubtask2": {
+          "count": 6,
+          "text": "test text",
+          "examples": [
+            {
+              "question": "subsub1q",
+              "option": "subsub1o",
+              "subject": "subsub1s",
+              "difficulty": "subsub1d"
+            }
+          ]
+        },
+        "examples": [
+          {
+            "question": "sub1q",
+            "option": "sub1o",
+            "subject": "sub1s",
+            "difficulty": "sub1d"
+          }
+        ]
+      },
+      "subtask2": {
+        "count": 4,
+        "text": "text sub 2",
+        "examples": [
+          {
+            "question": "sub2q",
+            "option": "sub2o",
+            "subject": "sub2s",
+            "difficulty": "sub2d"
+          }
+        ]
+      },
+      "count": 10,
+      "text": "text test 1",
+      "criteria": {
+        "fine_grained": [
+          {
+            "name": "criterias1",
+            "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam vitae dui sem. Sed nec orci vestibulum, semper mi id, efficitur tortor. Morbi rhoncus, velit a porta iaculis, nulla quam volutpat dui, nec accumsan magna elit eu sapien. Mauris commodo placerat aliquam. Phasellus volutpat eget nisi non placerat. Vivamus scelerisque semper diam, a mattis metus. Aliquam sed eleifend erat. Integer quis pharetra odio. Aenean mattis, metus sit amet lacinia aliquet, urna enim ullamcorper tortor, sed auctor nibh justo in metus. Donec dictum imperdiet purus, vel tincidunt tellus iaculis et."
+          },
+          {
+            "name": "criterias2",
+            "description": "desc2 desc2desc2desc2desc2desc2desc2desc2desc2desc2desc2"
+          }
+        ],
+        "critical": [
+          {
+            "name": "criteria1",
+            "description": "desc1 desc1desc1desc1desc1desc1desc1desc1desc1desc1desc1"
+          },
+          {
+            "name": "criteria2",
+            "description": "desc2 desc2desc2desc2desc2desc2desc2desc2desc2desc2desc2"
+          }
+        ],
+        "subjective": [
+          {
+            "name": "criteria1",
+            "description": "desc1 desc1desc1desc1desc1desc1desc1desc1desc1desc1desc1"
+          },
+          { "name": "criteria2", "description": "desc2" }
+        ],
+        "domain_specific": [],
+        "task_specific": [
+          { "name": "criteria1", "description": "desc1" },
+          { "name": "criteria2", "description": "desc2" }
+        ]
+      },
+      "examples": [
+        {
+          "question": "ex1",
+          "option": "op1",
+          "subject": "s1",
+          "difficulty": "d1"
+        }
+      ]
+    },
+    "task2": {
+      "subtask1": {
+        "count": 6,
+        "text": "text sub1",
+        "subsubtask1": {
+          "count": 6,
+          "text": "test text",
+          "examples": [
+            {
+              "question": "subsub1q",
+              "option": "subsub1o",
+              "subject": "subsub1s",
+              "difficulty": "subsub1d"
+            }
+          ]
+        },
+        "examples": [
+          {
+            "question": "sub1q",
+            "option": "sub1o",
+            "subject": "sub1s",
+            "difficulty": "sub1d"
+          }
+        ]
+      },
+      "subtask2": {
+        "count": 4,
+        "text": "text sub 2",
+        "examples": [
+          {
+            "question": "sub2q",
+            "option": "sub2o",
+            "subject": "sub2s",
+            "difficulty": "sub2d"
+          }
+        ]
+      },
+      "count": 10,
+      "text": "text test 3",
+      "criteria": {
+        "fine_grained": [
+          {
+            "name": "criteria1",
+            "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam vitae dui sem. Sed nec orci vestibulum, semper mi id, efficitur tortor. Morbi rhoncus, velit a porta iaculis, nulla quam volutpat dui, nec accumsan magna elit eu sapien. Mauris commodo placerat aliquam. Phasellus volutpat eget nisi non placerat. Vivamus scelerisque semper diam, a mattis metus. Aliquam sed eleifend erat. Integer quis pharetra odio. Aenean mattis, metus sit amet lacinia aliquet, urna enim ullamcorper tortor, sed auctor nibh justo in metus. Donec dictum imperdiet purus, vel tincidunt tellus iaculis et."
+          },
+          {
+            "name": "criteria2",
+            "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam vitae dui sem. Sed nec orci vestibulum, semper mi id, efficitur tortor. Morbi rhoncus, velit a porta iaculis, nulla quam volutpat dui, nec accumsan magna elit eu sapien. Mauris commodo placerat aliquam. Phasellus volutpat eget nisi non placerat. Vivamus scelerisque semper diam, a mattis metus. Aliquam sed eleifend erat. Integer quis pharetra odio. Aenean mattis, metus sit amet lacinia aliquet, urna enim ullamcorper tortor, sed auctor nibh justo in metus. Donec dictum imperdiet purus, vel tincidunt tellus iaculis et."
+          }
+        ],
+        "critical": [
+          {
+            "name": "criteria1",
+            "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam vitae dui sem. Sed nec orci vestibulum, semper mi id, efficitur tortor. Morbi rhoncus, velit a porta iaculis, nulla quam volutpat dui, nec accumsan magna elit eu sapien. Mauris commodo placerat aliquam. Phasellus volutpat eget nisi non placerat. Vivamus scelerisque semper diam, a mattis metus. Aliquam sed eleifend erat. Integer quis pharetra odio. Aenean mattis, metus sit amet lacinia aliquet, urna enim ullamcorper tortor, sed auctor nibh justo in metus. Donec dictum imperdiet purus, vel tincidunt tellus iaculis et."
+          },
+          {
+            "name": "criteria2",
+            "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam vitae dui sem. Sed nec orci vestibulum, semper mi id, efficitur tortor. Morbi rhoncus, velit a porta iaculis, nulla quam volutpat dui, nec accumsan magna elit eu sapien. Mauris commodo placerat aliquam. Phasellus volutpat eget nisi non placerat. Vivamus scelerisque semper diam, a mattis metus. Aliquam sed eleifend erat. Integer quis pharetra odio. Aenean mattis, metus sit amet lacinia aliquet, urna enim ullamcorper tortor, sed auctor nibh justo in metus. Donec dictum imperdiet purus, vel tincidunt tellus iaculis et."
+          }
+        ],
+        "subjective": [
+          {
+            "name": "criteria1",
+            "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam vitae dui sem. Sed nec orci vestibulum, semper mi id, efficitur tortor. Morbi rhoncus, velit a porta iaculis, nulla quam volutpat dui, nec accumsan magna elit eu sapien. Mauris commodo placerat aliquam. Phasellus volutpat eget nisi non placerat. Vivamus scelerisque semper diam, a mattis metus. Aliquam sed eleifend erat. Integer quis pharetra odio. Aenean mattis, metus sit amet lacinia aliquet, urna enim ullamcorper tortor, sed auctor nibh justo in metus. Donec dictum imperdiet purus, vel tincidunt tellus iaculis et."
+          },
+          {
+            "name": "criteria2",
+            "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam vitae dui sem. Sed nec orci vestibulum, semper mi id, efficitur tortor. Morbi rhoncus, velit a porta iaculis, nulla quam volutpat dui, nec accumsan magna elit eu sapien. Mauris commodo placerat aliquam. Phasellus volutpat eget nisi non placerat. Vivamus scelerisque semper diam, a mattis metus. Aliquam sed eleifend erat. Integer quis pharetra odio. Aenean mattis, metus sit amet lacinia aliquet, urna enim ullamcorper tortor, sed auctor nibh justo in metus. Donec dictum imperdiet purus, vel tincidunt tellus iaculis et."
+          }
+        ],
+        "domain_specific": [],
+        "task_specific": [
+          {
+            "name": "criteria1",
+            "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam vitae dui sem. Sed nec orci vestibulum, semper mi id, efficitur tortor. Morbi rhoncus, velit a porta iaculis, nulla quam volutpat dui, nec accumsan magna elit eu sapien. Mauris commodo placerat aliquam. Phasellus volutpat eget nisi non placerat. Vivamus scelerisque semper diam, a mattis metus. Aliquam sed eleifend erat. Integer quis pharetra odio. Aenean mattis, metus sit amet lacinia aliquet, urna enim ullamcorper tortor, sed auctor nibh justo in metus. Donec dictum imperdiet purus, vel tincidunt tellus iaculis et."
+          },
+          {
+            "name": "criteria2",
+            "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam vitae dui sem. Sed nec orci vestibulum, semper mi id, efficitur tortor. Morbi rhoncus, velit a porta iaculis, nulla quam volutpat dui, nec accumsan magna elit eu sapien. Mauris commodo placerat aliquam. Phasellus volutpat eget nisi non placerat. Vivamus scelerisque semper diam, a mattis metus. Aliquam sed eleifend erat. Integer quis pharetra odio. Aenean mattis, metus sit amet lacinia aliquet, urna enim ullamcorper tortor, sed auctor nibh justo in metus. Donec dictum imperdiet purus, vel tincidunt tellus iaculis et."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "question": "",
+          "option": "",
+          "subject": "",
+          "difficulty": ""
+        }
+      ]
+    },
+    "task3": {
+      "subtask1": {
+        "count": 6,
+        "text": "text sub1",
+        "subsubtask1": {
+          "count": 6,
+          "text": "test text",
+          "examples": [
+            {
+              "question": "subsub1q",
+              "option": "subsub1o",
+              "subject": "subsub1s",
+              "difficulty": "subsub1d"
+            }
+          ]
+        },
+        "examples": [
+          {
+            "question": "sub1q",
+            "option": "sub1o",
+            "subject": "sub1s",
+            "difficulty": "sub1d"
+          }
+        ]
+      },
+      "subtask2": {
+        "count": 4,
+        "text": "text sub 2",
+        "examples": [
+          {
+            "question": "sub2q",
+            "option": "sub2o",
+            "subject": "sub2s",
+            "difficulty": "sub2d"
+          }
+        ]
+      },
+      "count": 10,
+      "text": "text test 1",
+      "criteria": {
+        "fine_grained": [
+          {
+            "name": "criterias1",
+            "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam vitae dui sem. Sed nec orci vestibulum, semper mi id, efficitur tortor. Morbi rhoncus, velit a porta iaculis, nulla quam volutpat dui, nec accumsan magna elit eu sapien. Mauris commodo placerat aliquam. Phasellus volutpat eget nisi non placerat. Vivamus scelerisque semper diam, a mattis metus. Aliquam sed eleifend erat. Integer quis pharetra odio. Aenean mattis, metus sit amet lacinia aliquet, urna enim ullamcorper tortor, sed auctor nibh justo in metus. Donec dictum imperdiet purus, vel tincidunt tellus iaculis et."
+          },
+          {
+            "name": "criterias2",
+            "description": "desc2 desc2desc2desc2desc2desc2desc2desc2desc2desc2desc2"
+          }
+        ],
+        "critical": [
+          {
+            "name": "criteria1",
+            "description": "desc1 desc1desc1desc1desc1desc1desc1desc1desc1desc1desc1"
+          },
+          {
+            "name": "criteria2",
+            "description": "desc2 desc2desc2desc2desc2desc2desc2desc2desc2desc2desc2"
+          }
+        ],
+        "subjective": [
+          {
+            "name": "criteria1",
+            "description": "desc1 desc1desc1desc1desc1desc1desc1desc1desc1desc1desc1"
+          },
+          { "name": "criteria2", "description": "desc2" }
+        ],
+        "domain_specific": [],
+        "task_specific": [
+          { "name": "criteria1", "description": "desc1" },
+          { "name": "criteria2", "description": "desc2" }
+        ]
+      },
+      "examples": [
+        {
+          "question": "ex1",
+          "option": "op1",
+          "subject": "s1",
+          "difficulty": "d1"
+        }
+      ]
+    },
+    "task4": {
+      "subtask1": {
+        "count": 6,
+        "text": "text sub1",
+        "subsubtask1": {
+          "count": 6,
+          "text": "test text",
+          "examples": [
+            {
+              "question": "subsub1q",
+              "option": "subsub1o",
+              "subject": "subsub1s",
+              "difficulty": "subsub1d"
+            }
+          ]
+        },
+        "examples": [
+          {
+            "question": "sub1q",
+            "option": "sub1o",
+            "subject": "sub1s",
+            "difficulty": "sub1d"
+          }
+        ]
+      },
+      "subtask2": {
+        "count": 4,
+        "text": "text sub 2",
+        "examples": [
+          {
+            "question": "sub2q",
+            "option": "sub2o",
+            "subject": "sub2s",
+            "difficulty": "sub2d"
+          }
+        ]
+      },
+      "count": 10,
+      "text": "text test 1",
+      "criteria": {
+        "fine_grained": [
+          {
+            "name": "criterias1",
+            "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam vitae dui sem. Sed nec orci vestibulum, semper mi id, efficitur tortor. Morbi rhoncus, velit a porta iaculis, nulla quam volutpat dui, nec accumsan magna elit eu sapien. Mauris commodo placerat aliquam. Phasellus volutpat eget nisi non placerat. Vivamus scelerisque semper diam, a mattis metus. Aliquam sed eleifend erat. Integer quis pharetra odio. Aenean mattis, metus sit amet lacinia aliquet, urna enim ullamcorper tortor, sed auctor nibh justo in metus. Donec dictum imperdiet purus, vel tincidunt tellus iaculis et."
+          },
+          {
+            "name": "criterias2",
+            "description": "desc2 desc2desc2desc2desc2desc2desc2desc2desc2desc2desc2"
+          }
+        ],
+        "critical": [
+          {
+            "name": "criteria1",
+            "description": "desc1 desc1desc1desc1desc1desc1desc1desc1desc1desc1desc1"
+          },
+          {
+            "name": "criteria2",
+            "description": "desc2 desc2desc2desc2desc2desc2desc2desc2desc2desc2desc2"
+          }
+        ],
+        "subjective": [
+          {
+            "name": "criteria1",
+            "description": "desc1 desc1desc1desc1desc1desc1desc1desc1desc1desc1desc1"
+          },
+          { "name": "criteria2", "description": "desc2" }
+        ],
+        "domain_specific": [],
+        "task_specific": [
+          { "name": "criteria1", "description": "desc1" },
+          { "name": "criteria2", "description": "desc2" }
+        ]
+      },
+      "examples": [
+        {
+          "question": "ex1",
+          "option": "op1",
+          "subject": "s1",
+          "difficulty": "d1"
+        }
+      ]
+    }
+  },
+  "evaluation_result": [
+    {
+      "task": "task1",
+      "difficulty": "option1",
+      "criteria_group": "group1",
+      "prompt": "",
+      "model_answer": "",
+      "evaluation_criteria": {
+        "group1": [
+          {
+            "category": "1",
+            "reason": "1"
+          },
+          {
+            "category": "1",
+            "reason": "1"
+          }
+        ]
+      }
+    },
+    {
+      "task": "task1",
+      "difficulty": "option1",
+      "criteria_group": "group2",
+      "prompt": "",
+      "model_answer": "",
+      "evaluation_criteria": {
+        "group1": [
+          {
+            "category": "2",
+            "reason": "2"
+          },
+          {
+            "category": "2",
+            "reason": "2"
+          }
+        ]
+      }
+    },
+    {
+      "task": "task1",
+      "difficulty": "option1",
+      "criteria_group": "group3",
+      "prompt": "",
+      "model_answer": "",
+      "evaluation_criteria": {
+        "group1": [
+          {
+            "category": "3",
+            "reason": "3"
+          },
+          {
+            "category": "3",
+            "reason": "3"
+          }
+        ]
+      }
+    },
+    {
+      "task": "task1",
+      "difficulty": "option",
+      "criteria_group": "group4",
+      "prompt": "",
+      "model_answer": "",
+      "evaluation_criteria": {
+        "group1": [
+          {
+            "category": "4",
+            "reason": "4"
+          },
+          {
+            "category": "4",
+            "reason": "4"
+          }
+        ]
+      }
+    },
+    {
+      "task": "task1",
+      "difficulty": "option2",
+      "criteria_group": "group4",
+      "prompt": "test",
+      "model_answer": "",
+      "evaluation_criteria": {
+        "group1": [
+          {
+            "category": "4",
+            "reason": "4"
+          },
+          {
+            "category": "4",
+            "reason": "4"
+          }
+        ]
+      }
+    }
+  ]
+}

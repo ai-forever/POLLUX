@@ -1,0 +1,49 @@
+#root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 auto;
+  max-width: 1440px;
+  padding: 0;
+  text-align: center;
+  overflow-x: hidden;
+}
+
+* {
+  /* для дебага стилей под мобилку */
+  /* outline: 1px solid red; */
+  margin: 0;
+}
+
+::-webkit-scrollbar {
+  width: 7px; /* ширина скролла */
+}
+
+/* Стилизация ползунка скролла */
+::-webkit-scrollbar-thumb {
+  background-color: #F3F3F3; /* цвет ползунка */
+  border-radius: 10px;
+}
+
+::-moz-scrollbar {
+  width: 7px; /* ширина скролла */
+}
+
+/* Стилизация ползунка скролла */
+::-moz-scrollbar-thumb {
+  background-color: #F3F3F3; /* цвет ползунка */
+  border-radius: 10px;
+}
+
+.css-1808mag-MuiPaper-root-MuiAccordion-root.Mui-expanded {
+  margin: 0 !important;
+}
+
+.css-1808mag-MuiPaper-root-MuiAccordion-root::before {
+  display: none;
+}
+
+.recharts-sector:focus {
+  outline: none !important;
+  stroke-width: 0 !important;
+}

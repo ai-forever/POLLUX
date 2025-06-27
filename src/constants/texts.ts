@@ -1,0 +1,13 @@
+export const firstBlockFirstParagraph =
+  'Regular text. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse convallis tellus sit amet arcu vehicula, eget semper enim efficitur. Suspendisse consectetur volutpat mattis. Cras mattis imperdiet luctus. Cras turpis quam, blandit ut ante nec, volutpat dictum nisl. Ut sit amet interdum eros. Nulla a lorem laoreet lacus commodo lacinia. Aenean est ligula, viverra a condimentum ut, pretium at urna.';
+
+export const firstBlockSecondParagraph = "Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Nullam quis ipsum libero. Cras facilisis vitae sem et sagittis. Quisque tincidunt in ipsum nec efficitur. Maecenas malesuada ex vel est iaculis, in pretium libero pretium. Aliquam ac laoreet quam. Praesent aliquam odio a purus elementum, et aliquet tortor bibendum. Nam sit amet iaculis sapien. Nunc sit amet purus maximus, finibus lacus vitae, accumsan ex.";
+
+export const firstCarouselDescription = "Picture descrdescription. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse convallis tellus sit amet arcu vehicula, eget semper enim efficitur.";
+
+export const firstBlockThirdParagraph = "Regular text. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse convallis tellus sit amet arcu vehicula, eget semper enimefficitur. Suspendisse consectetur volutpat mattis. Cras mattis imperdiet luctus. Cras turpis quam, blandit ut ante nec, volutpat dictum nisl. Ut sit amet interdum eros. Nulla a lorem laoreet lacus commodo lacinia. Aenean est ligula, viverra a condimentum ut, pretium at urna."
+
+export const secondBlockFirstParagraph = "Regular text. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse convallis tellus sit amet arcu vehicula, eget semper enim efficitur. Suspendisse consectetur volutpat mattis. Cras mattis imperdiet luctus. Cras turpis quam, blandit ut ante nec, volutpat dictum nisl. Ut sit amet interdum eros. Nulla a lorem laoreet lacus commodo lacinia. Aenean est ligula, viverra a condimentum ut, pretium at urna.";
+export const secondCarouselDescription = "Picture descrdescription. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse convallis tellus sit amet arcu vehicula, eget semper enim efficitur.";
+
+export const thirdBlockFirstParagraph = "Regular text. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse convallis tellus sit amet arcu vehicula, eget semper enim efficitur. Suspendisse consectetur volutpat mattis. Cras mattis imperdiet luctus. Cras turpis quam, blandit ut ante nec, volutpat dictum nisl. Ut sit amet interdum eros. Nulla a lorem laoreet lacus commodo lacinia. Aenean est ligula, viverra a condimentum ut, pretium at urna.";
