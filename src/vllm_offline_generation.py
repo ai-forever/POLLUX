@@ -1,8 +1,9 @@
 from vllm import LLM, SamplingParams
 from vllm import ModelRegistry
+from utils.qwen2_vllm import Qwen2WithRegressionHead
 ModelRegistry.register_model("Qwen2WithRegressionHead", Qwen2WithRegressionHead)
 
-from utils.qwen2_vllm import Qwen2WithRegressionHead
+
 
 
 def offline_generation(model_name, instructions, tokenizer, tensor_parallel_size=1, mode="chat"):
@@ -15,9 +16,9 @@ def offline_generation(model_name, instructions, tokenizer, tensor_parallel_size
         dtype="bfloat16")
     if mode == "chat":
         prompts = list(map(lambda x: [{"role": "user", "content": x}], instructions))
-        outputs = llm.chat(prompts, sampling_params=SamplingParams(temperature=0, max_tokens =1024))
+        outputs = llm.chat(prompts, sampling_params=SamplingParams(temperature=0, max_tokens = 1024))
     elif mode == "generate":
-        outputs = llm.generate(instructions, sampling_params=SamplingParams(temperature=0, max_tokens =1024))
+        outputs = llm.generate(instructions, sampling_params=SamplingParams(temperature=0, max_tokens = 1024))
     answers = [output.outputs[0].text for output in outputs]
     return answers
 
