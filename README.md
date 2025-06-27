@@ -17,7 +17,7 @@
     <img alt="Release" src="https://badgen.net/badge/release/v1.0.0/">
     </a>
     <a href="https://arxiv.org/pdf/2505.24616">
-    <img alt="Paper" src="https://img.shields.io/badge/arXiv-2505.00000-red">
+    <img alt="Paper" src="https://img.shields.io/badge/arXiv-2505.24616-red">
     </a>
 </p>
 
@@ -118,7 +118,7 @@ With at least two expert evaluators per criterion, we've collected:
 
 ▎🌐 Access & Exploration
 
-Ready to dive in? Access the benchmark on its [home page](https://huggingface.co/datasets/ai-forever/POLLUX) and explore the data through our interactive demo! 🎮 
+Ready to dive in? Access the benchmark on its [home page](https://huggingface.co/datasets/ai-forever/POLLUX) and explore the data through our [interactive demo]()! 🎮 
 
 
 
@@ -144,14 +144,15 @@ This project is licensed under the MIT License. See [LICENSE](LICENSE) for detai
 If you use POLLUX in your research, please cite the following paper:
 
 ```bibtex
-@misc{martynov2025eyejudgementdissectingevaluation,
-      title={Eye of Judgement: Dissecting the Evaluation of Russian-speaking LLMs with POLLUX}, 
-      author={Nikita Martynov and Anastasia Mordasheva and Dmitriy Gorbetskiy and Danil Astafurov and Ulyana Isaeva and Elina Basyrova and Sergey Skachkov and Victoria Berestova and Nikolay Ivanov and Valeriia Zanina and Alena Fenogenova},
-      year={2025},
-      eprint={2505.24616},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL},
-      url={https://arxiv.org/abs/2505.24616}, 
+@misc{
+  martynov2025eyejudgementdissectingevaluation,
+  title={Eye of Judgement: Dissecting the Evaluation of Russian-speaking LLMs with POLLUX}, 
+  author={Nikita Martynov and Anastasia Mordasheva and Dmitriy Gorbetskiy and Danil Astafurov and Ulyana Isaeva and Elina Basyrova and Sergey Skachkov and Victoria Berestova and Nikolay Ivanov and Valeriia Zanina and Alena Fenogenova},
+  year={2025},
+  eprint={2505.24616},
+  archivePrefix={arXiv},
+  primaryClass={cs.CL},
+  url={https://arxiv.org/abs/2505.24616}
 }
 ```
 
