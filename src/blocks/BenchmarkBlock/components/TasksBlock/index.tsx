@@ -22,17 +22,15 @@ const TaskBlockWrapper = styled(Box)`
 `;
 
 export const TaskBlock: FC = () => {
-  const { optionText, questionText, subjectText, difficultyText } =
+  const { optionText, instructionText, domainText, difficultyText } =
     useContext(DataContext);
   return (
     <TaskBlockWrapper>
       <CardCustom headerText="Tasks examples">
         <CardTask
-          headerText="Science"
-          isNeedDivider
-          questionText={questionText}
+          instructionText={instructionText}
           optionText={optionText}
-          subjectText={subjectText}
+          domainText={domainText}
           difficultyText={difficultyText}
         />
       </CardCustom>

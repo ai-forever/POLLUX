@@ -11,10 +11,10 @@ interface PieChartProviderProps {
 }
 
 export const PieChartProvider: FC<PieChartProviderProps> = ({ children }) => {
-  const [questionText, setQuestionText] = useState<string>('');
+  const [instructionText, setInstructionText] = useState<string>('');
   const [optionText, setOptionText] = useState<string>('');
   const [difficultyText, setDifficultyText] = useState<string>('');
-  const [subjectText, setSubjectText] = useState<string>('');
+  const [domainText, setDomainText] = useState<string>('');
   const [dataPie, setDataPie] = useState(transformedData);
   const [selectedData, setSelectedData] = useState<RechartsDataItem>();
   const [text, setText] = useState<string>('');
@@ -24,17 +24,17 @@ export const PieChartProvider: FC<PieChartProviderProps> = ({ children }) => {
     <DataContext.Provider
       value={{
         data: dataPie,
-        questionText,
+        instructionText,
         optionText,
         difficultyText,
-        subjectText,
+        domainText,
         selectedData,
         setSelectedData,
         setDataPie,
-        setQuestionText,
+        setInstructionText,
         setDifficultyText,
         setOptionText,
-        setSubjectText,
+        setDomainText,
         text,
         setText,
         criterias,

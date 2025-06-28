@@ -6,9 +6,9 @@ interface CardProps {
   headerText?: string;
   hintHeaderText?: string;
   isNeedDivider?: boolean;
-  questionText: string;
+  instructionText: string;
   optionText: string;
-  subjectText: string;
+  domainText: string;
   difficultyText: string;
 }
 
@@ -157,9 +157,8 @@ export const CardTask: FC<CardProps> = ({
   headerText,
   hintHeaderText,
   isNeedDivider,
-  questionText,
-  optionText,
-  subjectText,
+  instructionText,
+  domainText,
   difficultyText,
 }) => {
   const [open, setOpen] = useState<boolean>(false);
@@ -177,14 +176,12 @@ export const CardTask: FC<CardProps> = ({
       <CardContentWrapper>
         <DialogueBlock>
           <FromMessage>
-            Question: <TextMessage>{questionText}</TextMessage>
+            Instruction: <TextMessage>{instructionText}</TextMessage>
           </FromMessage>
-          <FromMessage>
-            Option: <TextMessage>{optionText}</TextMessage>
-          </FromMessage>
+
           <hr />
           <FromMessage>
-            Subject: <TextMessage>{subjectText}</TextMessage>
+            Domain: <TextMessage>{domainText}</TextMessage>
           </FromMessage>
           <FromMessage>
             Difficulty: <TextMessage>{difficultyText}</TextMessage>
@@ -196,12 +193,10 @@ export const CardTask: FC<CardProps> = ({
         <StyledModal>
           <ModalContentWrapper>
             <FromMessage>Question: </FromMessage>
-            {questionText}
-            <FromMessage>Option: </FromMessage>
-            {optionText}
+            {instructionText}
             <hr />
-            <FromMessage>Subject: </FromMessage>
-            {subjectText}
+            <FromMessage>Domain: </FromMessage>
+            {domainText}
             <FromMessage>Difficulty: </FromMessage>
             {difficultyText}
           </ModalContentWrapper>

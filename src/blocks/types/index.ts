@@ -12,7 +12,7 @@ export type TCriteria = {
 };
 
 export type TExamples = {
-  question: string;
+  instruction: string;
   option: string;
   subject: string;
   difficulty: string;

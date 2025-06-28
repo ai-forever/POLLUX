@@ -20,8 +20,8 @@ export const PiechartBlock: FC = () => {
     setSelectedData,
     setDifficultyText,
     setOptionText,
-    setQuestionText,
-    setSubjectText,
+    setInstructionText,
+    setDomainText,
     setText,
     setCriterias,
     setToggleState,
@@ -66,9 +66,9 @@ export const PiechartBlock: FC = () => {
 
   const setAllContent = (element: RechartsDataItem) => {
     setOptionText(element.option);
-    setQuestionText(element.question);
+    setInstructionText(element.instruction);
     setDifficultyText(element.difficulty);
-    setSubjectText(element.subject);
+    setDomainText(element.domain);
     setActiveData([...activeData, element.name]);
     setText(element.text);
     setCriterias(element.criteria);

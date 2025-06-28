@@ -33,9 +33,9 @@ export const EvaluationDialogues: FC = () => {
               items.map((item: TGroupElement, idx) => (
                 <EvaluationCard
                   key={idx}
-                  headerText="Evaluation by criteria"
-                  errorCategoryText={item.category}
-                  errorReasonText={item.reason}
+                  headerText={item.criteria}
+                  errorCategoryText={item.score}
+                  errorReasonText={item.comment}
                 />
               )),
             )}

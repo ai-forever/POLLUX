@@ -5,9 +5,9 @@ export type RechartsDataItem = {
   name: string;
   value: number;
   children?: RechartsDataItem[];
-  question: string;
+  instruction: string;
   option: string;
-  subject: string;
+  domain: string;
   difficulty: string;
   criteria: TCriteria;
   text: string;
@@ -35,11 +35,10 @@ function convertTaskSpecificToRechartsData(
         name: key,
         value: value.count,
         children: children.length ? children : undefined,
-        question: value.examples[0].question,
-        option: value.examples[0].option,
-        subject: value.examples[0].subject,
+        instruction: value.examples[0].instruction,
+        domain: value.examples[0].domain,
         difficulty: value.examples[0].difficulty,
-        text: value.text,
+        text: value.description,
         criteria: {
           fine_grained: value.criteria?.fine_grained,
           subjective: value.criteria?.subjective,

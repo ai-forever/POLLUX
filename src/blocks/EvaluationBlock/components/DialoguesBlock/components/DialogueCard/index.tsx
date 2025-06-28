@@ -1,11 +1,10 @@
 import { FC, useContext } from 'react';
 import styled from 'styled-components';
 import { EvaluationContext } from '../../../../storage/context';
-import { TGroup } from '../../../../../BenchmarkBlock/components/PieChartBlock/types/pieChartTypes';
+import { TGroup } from '../../../../../types';
 
 const StyledCard = styled.article<{ isActive: boolean }>`
   width: 374px;
-  height: 244px;
   display: flex;
   flex-direction: column;
   font-size: 16px;
@@ -32,7 +31,6 @@ const CardBody = styled.div`
   text-align: start;
   padding-top: 10px;
   padding-left: 15px;
-  height: 170px;
 `;
 
 const FromMessage = styled.span`

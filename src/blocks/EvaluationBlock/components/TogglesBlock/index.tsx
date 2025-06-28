@@ -5,7 +5,7 @@ import {
   Radio,
   RadioGroup,
 } from '@mui/material';
-import { FC, useContext } from 'react';
+import { FC, useContext, useState } from 'react';
 import styled from 'styled-components';
 import { CustomAccordion } from './components';
 import { EvaluationContext } from '../../storage/context';
@@ -19,10 +19,51 @@ const TogglesBlockWrapper = styled(Box)`
 `;
 
 export const TogglesBlock: FC = () => {
-  const { search } = useContext(EvaluationContext);
+  const { search, taskSet, difficultySet, criteriaGroupSet } =
+    useContext(EvaluationContext);
   const onChangeHandle = (event: React.ChangeEvent<HTMLInputElement>) => {
     search(event.currentTarget.value);
   };
+
+  const [taskArr, setTaskArr] = useState<Array<string>>(
+    Array.from(taskSet) as Array<string>,
+  );
+
+  const [difficultyArr, setDifficultyArr] = useState<Array<string>>(
+    Array.from(difficultySet) as Array<string>,
+  );
+
+  const [criteriaGroupArr, setCriteriaGroupArr] = useState<Array<string>>(
+    Array.from(criteriaGroupSet) as Array<string>,
+  );
+
+  const taskItems = taskArr.map((task) => (
+    <FormControlLabel
+      value={task}
+      control={<Radio />}
+      label={task}
+      onChange={onChangeHandle}
+    />
+  ));
+
+  const difficultyItems = difficultyArr.map((difficulty) => (
+    <FormControlLabel
+      value={difficulty}
+      control={<Radio />}
+      label={difficulty}
+      onChange={onChangeHandle}
+    />
+  ));
+
+  const criteriaGroupItems = criteriaGroupArr.map((criteriaGroup) => (
+    <FormControlLabel
+      value={criteriaGroup}
+      control={<Radio />}
+      label={criteriaGroup}
+      onChange={onChangeHandle}
+    />
+  ));
+
   return (
     <TogglesBlockWrapper>
       <CardCustom headerText="Тоглы - фильтры">
@@ -33,30 +74,7 @@ export const TogglesBlock: FC = () => {
               defaultValue="female"
               name="level-radiobuttons"
             >
-              <FormControlLabel
-                value="task1"
-                control={<Radio />}
-                label="1 уровень"
-                onChange={onChangeHandle}
-              />
-              <FormControlLabel
-                value="task2"
-                control={<Radio />}
-                label="2 уровень"
-                onChange={onChangeHandle}
-              />
-              <FormControlLabel
-                value="task3"
-                control={<Radio />}
-                label="3 уровень"
-                onChange={onChangeHandle}
-              />
-              <FormControlLabel
-                value="task4"
-                control={<Radio />}
-                label="4 уровень"
-                onChange={onChangeHandle}
-              />
+              {taskItems}
             </RadioGroup>
           </FormControl>
         </CustomAccordion>
@@ -67,30 +85,7 @@ export const TogglesBlock: FC = () => {
               defaultValue="female"
               name="level-radiobuttons"
             >
-              <FormControlLabel
-                value="option1"
-                control={<Radio />}
-                label="1 уровень"
-                onChange={onChangeHandle}
-              />
-              <FormControlLabel
-                value="option2"
-                control={<Radio />}
-                label="2 уровень"
-                onChange={onChangeHandle}
-              />
-              <FormControlLabel
-                value="option3"
-                control={<Radio />}
-                label="3 уровень"
-                onChange={onChangeHandle}
-              />
-              <FormControlLabel
-                value="option4"
-                control={<Radio />}
-                label="4 уровень"
-                onChange={onChangeHandle}
-              />
+              {difficultyItems}
             </RadioGroup>
           </FormControl>
         </CustomAccordion>
@@ -101,30 +96,7 @@ export const TogglesBlock: FC = () => {
               defaultValue="female"
               name="level-radiobuttons"
             >
-              <FormControlLabel
-                value="group1"
-                control={<Radio />}
-                label="1 уровень"
-                onChange={onChangeHandle}
-              />
-              <FormControlLabel
-                value="group2"
-                control={<Radio />}
-                label="2 уровень"
-                onChange={onChangeHandle}
-              />
-              <FormControlLabel
-                value="group3"
-                control={<Radio />}
-                label="3 уровень"
-                onChange={onChangeHandle}
-              />
-              <FormControlLabel
-                value="group4"
-                control={<Radio />}
-                label="4 уровень"
-                onChange={onChangeHandle}
-              />
+              {criteriaGroupItems}
             </RadioGroup>
           </FormControl>
         </CustomAccordion>

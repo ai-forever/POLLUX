@@ -61,7 +61,7 @@ export const EvaluationCriteriaBlock: FC = () => {
                   ),
                 )
               ) : (
-                <span>нет данных</span>
+                <span>{NO_DATA_TEXT}</span>
               )}
             </CustomAccordion>
             <CustomAccordion name="critical">
@@ -125,15 +125,8 @@ export const EvaluationCriteriaBlock: FC = () => {
               )}
             </CustomAccordion>
           </AccordionsWrapper>
-          <ContentBlock headerText="Text text">
+          <ContentBlock headerText="Task Description">
             <StyledTypography>{text}</StyledTypography>
-            <Carousel
-              customStyle={{
-                width: '345px',
-                height: '162px',
-                marginBottom: '40px',
-              }}
-            />
           </ContentBlock>
         </CardCustom>
       </EvaluationCriteriaBlockWrapper>
