@@ -30,7 +30,7 @@
   <h4>
     <a href="./demo.ipynb">Demo code</a> |
     <a href="https://huggingface.co/collections/ai-forever/pollux-68418d171bb9a4ac1e62b424">Models & Dataset</a> |
-    <a href="ai-forever-pollux.githubpages.io">Benchmark demo</a> |
+    <a href="https://ai-forever.github.io/POLLUX/">Benchmark demo</a> |
     <a href="#citation">Publications</a>
   </h4>
 </div>
@@ -41,7 +41,7 @@ Welcome to **POLLUX**
 
 Our comprehensive evaluation framework is built on three foundational pillars. First, we provide carefully developed 📊 **taxonomies** that systematically categorize both generative tasks and evaluation criteria. Second, our meticulously crafted 🌟 **benchmark** comprises 2,100 unique, manually created instructions paired with 471,515 detailed point criteria assessments. Finally, POLLUX features a specialized ⚖️ **family of LLM-based judges** that automate the evaluation process, enabling scalable and systematic assessment of model outputs across all task categories.
 
-↗ 🧭 Explore the benchmark on the [project page](ai-forever-pollux.githubpages.io).
+↗ 🧭 Explore the benchmark on the [project page](https://ai-forever.github.io/POLLUX/).
 
 ↗ 🤗 See [Hugging Face collection](https://huggingface.co/collections/ai-forever/pollux-68418d171bb9a4ac1e62b424) for the dataset and the models.
 
@@ -124,7 +124,7 @@ With at least two expert evaluators per criterion, we've collected:
 
 ▎🌐 Access & Exploration
 
-Ready to dive in? Access the benchmark on its [home page](https://huggingface.co/datasets/ai-forever/POLLUX) and explore the data through our [interactive demo]()! 🎮 
+Ready to dive in? Access the benchmark on its [home page](https://huggingface.co/datasets/ai-forever/POLLUX) and explore the data through our [interactive demo](https://ai-forever.github.io/POLLUX/)! 🎮 
 
 
 
