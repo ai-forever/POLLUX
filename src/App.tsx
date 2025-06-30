@@ -205,8 +205,7 @@ function App() {
         <ContentBlock headerText="Citation" id="citation">
           <StyledUsageNotesWithLinks>
             @misc
-            {`{
-  martynov2025eyejudgementdissectingevaluation, title={Eye of Judgement: Dissecting the Evaluation of Russian-speaking LLMs with POLLUX}, 
+            {`{martynov2025eyejudgementdissectingevaluation, title={Eye of Judgement: Dissecting the Evaluation of Russian-speaking LLMs with POLLUX}, 
   author={Nikita Martynov and Anastasia Mordasheva and Dmitriy Gorbetskiy and Danil Astafurov and Ulyana Isaeva and Elina Basyrova and Sergey Skachkov and Victoria Berestova and Nikolay Ivanov and Valeriia Zanina and Alena Fenogenova},
   year={2025},
   eprint={2505.24616},
