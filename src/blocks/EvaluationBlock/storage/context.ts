@@ -3,7 +3,7 @@ import { createContext } from 'react';
 export const EvaluationContext = createContext({
   data: [],
   criterias: [],
-  search: (value: string) => {},
+  search: (value: any) => {},
   setCriterias: (value: any) => {},
   setActive: (value: boolean) => {}, 
   taskSet: new Set(),

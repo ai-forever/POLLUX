@@ -137,6 +137,7 @@ const StyledModal = styled.div`
   transform: translate(-50%, -50%);
   width: 400px;
   height: 400px;
+  overflow: scroll;
 `;
 
 const ModalContentWrapper = styled.div`
@@ -192,7 +193,7 @@ export const CardTask: FC<CardProps> = ({
       <Modal open={open} onClose={closeHandle}>
         <StyledModal>
           <ModalContentWrapper>
-            <FromMessage>Question: </FromMessage>
+            <FromMessage>Instruction: </FromMessage>
             {instructionText}
             <hr />
             <FromMessage>Domain: </FromMessage>

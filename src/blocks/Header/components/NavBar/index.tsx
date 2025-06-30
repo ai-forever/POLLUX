@@ -16,7 +16,7 @@ export const NavBar: FC = () => {
         <StyledLink href="#benchmark">Navigate Benchmark</StyledLink>
       </li>
       <li>
-        <StyledLink href="#evaluation">Evaluation Result</StyledLink>
+        <StyledLink href="#evaluation">Human feedback</StyledLink>
       </li>
       <li>
         <StyledLink href="#statistics">Statistics</StyledLink>

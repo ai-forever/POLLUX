@@ -22,6 +22,15 @@ const StyledAccordion = styled(Accordion)`
   & .css-1808mag-MuiPaper-root-MuiAccordion-root.Mui-expanded {
     margin: none;
   }
+
+  & .css-rizt0-MuiTypography-root {
+    font-size: 12px;
+    text-overflow: ellipsis;
+  }
+
+  .css-1lj39kh-MuiAccordionDetails-root {
+    padding: 8px 0 16px 16px;
+  }
 `;
 
 const StyledAccordionSummary = styled(AccordionSummary)`

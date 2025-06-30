@@ -23,6 +23,11 @@ const StyledAccordion = styled(Accordion)`
   & .css-1808mag-MuiPaper-root-MuiAccordion-root.Mui-expanded {
     margin: none;
   }
+
+
+  & .css-1uent87-MuiButtonBase-root-MuiButton-root {
+    font-size: 10px;
+  }
 `;
 
 const StyledAccordionSummary = styled(AccordionSummary)`

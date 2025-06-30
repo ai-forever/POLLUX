@@ -14,30 +14,63 @@ export const EvaluationBlockProvider: FC<EvaluationBlockProviderProps> = ({
   const [foundedData, setFoundedData] = useState<Array<TEvaluatiuonResult>>([]);
   const [criterias, setCriterias] = useState<Array<TGroup>>([]);
   const [activeCardId, setActiveCardId] = useState<number | null>(null);
+  const [selectedTask, setSelectedTask] = useState<string | null>(null);
+  const [selectedDifficulty, setSelectedDifficulty] = useState<string | null>(
+    null,
+  );
+  const [selectedCriteriaGroup, setSelectedCriteriaGroup] = useState<
+    string | null
+  >(null);
   const taskSet = new Set();
   const difficultySet = new Set();
   const criteriaGroupSet = new Set();
-
   evaluationData.forEach((element) => {
     taskSet.add(element.task);
     difficultySet.add(element.difficulty);
     criteriaGroupSet.add(element.criteria_group);
   });
 
-  const getResultsBySearch = (value: string) => {
-    const results = evaluationData.filter(
-      (evaluation) =>
-        evaluation.task === value ||
-        evaluation.criteria_group === value ||
-        evaluation.difficulty === value,
-    );
+  const getResultsBySearch = (
+    task: string | null,
+    difficulty: string | null,
+    criteriaGroup: string | null,
+  ) => {
+    return evaluationData.filter((evaluation) => {
+      const matchTask = task ? evaluation.task === task : true;
+      const matchDifficulty = difficulty
+        ? evaluation.difficulty === difficulty
+        : true;
+      const matchCriteriaGroup = criteriaGroup
+        ? evaluation.criteria_group === criteriaGroup
+        : true;
 
-    return results;
+      return matchTask && matchDifficulty && matchCriteriaGroup;
+    });
   };
+  
+  const search = (params: {
+    task?: string | null;
+    difficulty?: string | null;
+    criteriaGroup?: string | null;
+  }) => {
+    const { task, difficulty, criteriaGroup } = params;
 
-  const search = (value: string) => {
-    const resultedArr = getResultsBySearch(value);
-    setFoundedData(resultedArr);
+    if (task !== undefined) setSelectedTask(task);
+    if (difficulty !== undefined) setSelectedDifficulty(difficulty);
+    if (criteriaGroup !== undefined) setSelectedCriteriaGroup(criteriaGroup);
+
+    const finalTask = task !== undefined ? task : selectedTask;
+    const finalDifficulty =
+      difficulty !== undefined ? difficulty : selectedDifficulty;
+    const finalCriteriaGroup =
+      criteriaGroup !== undefined ? criteriaGroup : selectedCriteriaGroup;
+
+    const results = getResultsBySearch(
+      finalTask,
+      finalDifficulty,
+      finalCriteriaGroup,
+    );
+    setFoundedData(results);
   };
 
   return (

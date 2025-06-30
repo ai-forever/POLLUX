@@ -5,7 +5,7 @@ import {
   Radio,
   RadioGroup,
 } from '@mui/material';
-import { FC, useContext, useState } from 'react';
+import React, { FC, useContext, useState } from 'react';
 import styled from 'styled-components';
 import { CustomAccordion } from './components';
 import { EvaluationContext } from '../../storage/context';
@@ -21,10 +21,14 @@ const TogglesBlockWrapper = styled(Box)`
 export const TogglesBlock: FC = () => {
   const { search, taskSet, difficultySet, criteriaGroupSet } =
     useContext(EvaluationContext);
-  const onChangeHandle = (event: React.ChangeEvent<HTMLInputElement>) => {
-    search(event.currentTarget.value);
-  };
-
+  const onChangeHandle =
+    (type: 'task' | 'difficulty' | 'criteriaGroup') =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const value = event.currentTarget.value;
+      if (type === 'task') search({ task: value });
+      else if (type === 'difficulty') search({ difficulty: value });
+      else if (type === 'criteriaGroup') search({ criteriaGroup: value });
+    };
   const [taskArr, setTaskArr] = useState<Array<string>>(
     Array.from(taskSet) as Array<string>,
   );
@@ -42,7 +46,7 @@ export const TogglesBlock: FC = () => {
       value={task}
       control={<Radio />}
       label={task}
-      onChange={onChangeHandle}
+      onChange={onChangeHandle('task')}
     />
   ));
 
@@ -51,7 +55,7 @@ export const TogglesBlock: FC = () => {
       value={difficulty}
       control={<Radio />}
       label={difficulty}
-      onChange={onChangeHandle}
+      onChange={onChangeHandle('difficulty')}
     />
   ));
 
@@ -60,14 +64,14 @@ export const TogglesBlock: FC = () => {
       value={criteriaGroup}
       control={<Radio />}
       label={criteriaGroup}
-      onChange={onChangeHandle}
+      onChange={onChangeHandle('criteriaGroup')}
     />
   ));
 
   return (
     <TogglesBlockWrapper>
-      <CardCustom headerText="Тоглы - фильтры">
-        <CustomAccordion name="Таска">
+      <CardCustom headerText="Choose an example">
+        <CustomAccordion name="Task group">
           <FormControl>
             <RadioGroup
               aria-labelledby="demo-radio-buttons-group-label"
@@ -78,7 +82,7 @@ export const TogglesBlock: FC = () => {
             </RadioGroup>
           </FormControl>
         </CustomAccordion>
-        <CustomAccordion name="Сложность">
+        <CustomAccordion name="Difficulty">
           <FormControl>
             <RadioGroup
               aria-labelledby="demo-radio-buttons-group-label"
@@ -89,7 +93,7 @@ export const TogglesBlock: FC = () => {
             </RadioGroup>
           </FormControl>
         </CustomAccordion>
-        <CustomAccordion name="Группа критериев">
+        <CustomAccordion name="Criteria category">
           <FormControl>
             <RadioGroup
               aria-labelledby="demo-radio-buttons-group-label"

@@ -1,7 +1,7 @@
 import { Box, Button, Tooltip } from '@mui/material';
-import { FC, useContext, useEffect } from 'react';
+import { FC, useContext } from 'react';
 import styled from 'styled-components';
-import { CardCustom, Carousel, CustomAccordion } from '../../../../components';
+import { CardCustom, CustomAccordion } from '../../../../components';
 import { ContentBlock } from '../../../ContentBlock';
 import { DataContext } from '../PieChartBlock/storage/context';
 import { TCiteriaField } from '../../../types';
@@ -42,7 +42,7 @@ const AccordionsWrapper = styled.div`
 `;
 
 export const EvaluationCriteriaBlock: FC = () => {
-  const NO_DATA_TEXT = 'No data';
+  const NO_DATA_TEXT = 'No such criteria, check other categories';
   const { criterias, text } = useContext(DataContext);
   if (criterias) {
     return (

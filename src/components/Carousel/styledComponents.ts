@@ -3,6 +3,7 @@ import Slider from 'react-slick';
 import styled from 'styled-components';
 
 export const CaruoselWrapper = styled.div`
+  margin-bottom: 50px;
   max-width: 945px;
   width: 100%;
   height: 100%;

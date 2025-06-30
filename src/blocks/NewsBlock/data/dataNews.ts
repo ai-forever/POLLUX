@@ -11,19 +11,8 @@ export type NewsType = {
 
 export const newsData: Array<NewsType> = [
   {
-    icon: userLogo,
-    date: '11/03/2025',
-    newsHeadline: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-  },
-  {
-    icon: locationLogo,
-    date: '23/02/2025',
-    newsHeadline:
-      'Suspendisse convallis tellus sit amet arcu vehicula, eget semper enim efficitur.',
-  },
-  {
     icon: serverLogo,
-    date: '21/01/2025',
-    newsHeadline: 'Nulla a lorem laoreet lacus commodo lacinia.',
-  },
+    date: '30/06/2025',
+    newsHeadline: 'We release the POLLUX dataset alongside a family of LM-as-a-Judge models!',
+  }
 ];

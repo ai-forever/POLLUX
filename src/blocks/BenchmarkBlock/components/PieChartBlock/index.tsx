@@ -1,7 +1,7 @@
 import { FC, useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { CardCustom } from '../../../../components';
-import { Box, } from '@mui/material';
+import { Box } from '@mui/material';
 import { Cell, Pie, PieChart, Tooltip } from 'recharts';
 import { DataContext } from './storage/context';
 import { RechartsDataItem } from './data/convertFromJSONtoRechart';
@@ -74,7 +74,15 @@ export const PiechartBlock: FC = () => {
     setCriterias(element.criteria);
   };
 
+  const displayedData =
+    activeData.length > 0 ? storyData[storyData.length - 1] : data;
+
   const handleBackwardStep = () => {
+    setInstructionText('');
+    setDifficultyText('');
+    setDomainText('');
+    setText('');
+    setCriterias('');
     setStoryData((prevItems) => prevItems.slice(0, -1)); // удаляем последний элемент
   };
 
@@ -86,9 +94,6 @@ export const PiechartBlock: FC = () => {
       setSelectedData(storyData[setStoryData.length - 1]);
     }
   };
-
-  const displayedData =
-    activeData.length > 0 ? storyData[storyData.length - 1] : data;
 
   return (
     <PieChartBlockWrapper>

@@ -11,8 +11,7 @@ const EvaluationBlockWrapper = styled(Box)`
   flex-direction: column;
   gap: 20px;
   width: 383px;
-  max-height: 690px;
-  height: 690px;
+  max-height: 2300px;
   overflow: scroll;
 
   @media (max-width: 500px) {

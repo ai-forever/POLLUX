@@ -12,7 +12,7 @@ const DialoguesBlockWrapper = styled(Box)`
   align-items: center;
   gap: 40px;
   max-width: 450px;
-  max-height: 690px;
+  max-height: 2500px;
   width: 450px;
   overflow: scroll;
 
