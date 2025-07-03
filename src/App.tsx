@@ -86,7 +86,7 @@ function App() {
         >
           <StyledAuthors>
             Nikita Martynov*(c), Anastasia Mordasheva*(c), Dmitriy Gorbetskiy*,
-            Danil Astafurov*(c), Elina Basyrova*, Ulyana Isaeva, Sergey
+            Danil Astafurov*(c), Elina Basyrova*, Ulyana Isaeva*, Sergey
             Skachkov, Victoria Berestova, Nikolay Ivanov, Valeriia Zanina, Anna
             Kostikova, Veniamin Sokolov and Alena Fenogenova
             <br />
