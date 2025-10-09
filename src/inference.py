@@ -17,7 +17,7 @@ LOG_DIR = "./logs"
 class Scoring(object):
     def __init__(self, test_path, template_path, num_proc):
         self.num_proc = num_proc
-        ds = datasets.load_dataset(test_path)["test"].select(range(100))
+        ds = datasets.load_dataset(test_path)["test"]
         ds = ds.remove_columns(["model_id", "task_type", "task_subtype", "task_subsubtype", "difficulty", "domain"])
         self.ds = ds.map(lambda example: {"prompt": format_prompt(example, template_path)}, num_proc=self.num_proc,
                          load_from_cache_file=False)
