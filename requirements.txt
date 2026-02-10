@@ -1,5 +1,6 @@
-fire==0.7.0
-vllm==0.8.3
-torch==2.6.0
-datasets==3.6.0
-transformers==4.53.0
+typer==0.21.1
+datasets==4.5.0
+openai==2.20.0
+torch==2.9.1
+transformers==4.57.6
+vllm==0.15.1

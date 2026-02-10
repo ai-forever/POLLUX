@@ -63,31 +63,113 @@ Our comprehensive evaluation framework is built on three foundational pillars. F
 
 Score model outputs with POLLUX judges: [demo.ipynb](demo.ipynb)
 
-To reproduce the evaluation results, please refer to the [src/inference.py](src/inference.py) file:
+To get scores for a custom model, run one of the code variants below; answers will be saved in the model's folder under `results/`. The maximum score is 2.
 
-```commandline
+**1. Clone and install**
+
+```bash
 git clone https://github.com/ai-forever/POLLUX.git
 cd POLLUX
 pip install -r requirements.txt
 ```
 
-```python ./src/inference.py --test_path ai-forever/POLLUX --template_path src/data_utils/test_prompt_template_ru.yaml --num_proc 1 inference_offline_vllm --model_path ai-forever/pollux-judge-7b --tokenizer_path ai-forever/pollux-judge-7b --tensor_parallel_size 1 --answer_path pollux_judge_7b.json```
+---
 
-```python ./src/inference.py --test_path ai-forever/POLLUX --template_path src/data_utils/test_prompt_template_ru.yaml --num_proc 1 compute_metrics --answer_path logs/pollux_judge_7b.json```
+#### OpenAI API
 
+Use any OpenAI-compatible endpoint (e.g. local server or OpenAI). Set `OPENAI_API_KEY` or pass `--api-key` and `--base-url`.
+
+**2. Generate model answers**
+```bash
+vllm serve <model_name> --port 8000
+```
+
+```bash
+python src/answer.py \
+  --split train \
+  --model <model_name> \
+  --backend openai \
+  --api-key NONE \
+  --base-url http://localhost:8000/v1 \
+  --max-tokens 1024 \
+  --temperature 0.5 \
+  --concurrency 100
+```
+
+**3. Score answers with POLLUX judge**
+```bash
+vllm serve <judge_model> --port 8888
+```
+
+```bash
+python src/score.py <model_name> \
+  --split train \
+  --backend openai \
+  --judge-model <judge_model (ai-forever/pollux-judge-7b or ai-forever/pollux-judge-32b)> \
+  --api-key NONE \
+  --base-url http://localhost:8888/v1 \
+  --max-tokens 1024 \
+  --temperature 0.1 \
+  --concurrency 100
+```
+
+**4. Compute metrics**
+
+```bash
+python src/metrics.py <model_name> --split train
+```
+
+---
+
+#### vLLM (offline)
+
+Run inference and judging locally with vLLM. No API key or base URL required.
+
+**2. Generate model answers**
+
+```bash
+python src/answer.py \
+  --split train \
+  --model <model_name> \
+  --backend vllm \
+  --max-tokens 1024 \
+  --temperature 0.5 \
+  --tensor-parallel-size 1
+```
+
+**3. Score answers with POLLUX judge**
+
+```bash
+python src/score.py <model_name> \
+  --split train \
+  --backend vllm \
+  --judge-model <judge_model (ai-forever/pollux-judge-7b or ai-forever/pollux-judge-32b)> \
+  --max-tokens 1024 \
+  --temperature 0.1 \
+  --tensor-parallel-size 1
+```
+
+**4. Compute metrics**
+
+```bash
+python src/metrics.py <model_name> --split train
+```
 
 
 ## 📂 Repository Structure
 
-```
-pollux/
-├── images/                 # project logo
-├── metainfo/               # benchmark metadata
-├── clustering_demo.ipynb   # user logs analysis
-├── src/                    # inference tools
-├── src/inference.py        # reproduce evaluation
-├── LICENSE                 # license
-└── demo.ipynb              # inference demo
+```text
+POLLUX/
+├── images/                 # Project logos
+├── metainfo/               # Benchmark metadata
+├── clustering_demo.ipynb   # User logs analysis
+├── src/                    # Inference tools
+│   ├── answer.py           # Generate model answers
+│   ├── score.py            # Run POLLUX judges
+│   ├── metrics.py          # Aggregate metrics
+│   └── inference.py        # Full evaluation pipeline
+├── LICENSE
+└── demo.ipynb              # Quick inference demo
 ```
 
 ## 🌟 Benchmark
@@ -147,18 +229,18 @@ There are two architecture types in both sizes:
 This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
 
 ## Citation
+
 If you use POLLUX in your research, please cite the following paper:
 
 ```bibtex
-@misc{
-  martynov2025eyejudgementdissectingevaluation,
-  title={Eye of Judgement: Dissecting the Evaluation of Russian-speaking LLMs with POLLUX}, 
-  author={Nikita Martynov and Anastasia Mordasheva and Dmitriy Gorbetskiy and Danil Astafurov and Ulyana Isaeva and Elina Basyrova and Sergey Skachkov and Victoria Berestova and Nikolay Ivanov and Valeriia Zanina and Alena Fenogenova},
-  year={2025},
-  eprint={2505.24616},
-  archivePrefix={arXiv},
-  primaryClass={cs.CL},
-  url={https://arxiv.org/abs/2505.24616}
+@misc{martynov2025eyejudgementdissectingevaluation,
+  title        = {Eye of Judgement: Dissecting the Evaluation of Russian-speaking LLMs with POLLUX},
+  author       = {Nikita Martynov and Anastasia Mordasheva and Dmitriy Gorbetskiy and Danil Astafurov and Ulyana Isaeva and Elina Basyrova and Sergey Skachkov and Victoria Berestova and Nikolay Ivanov and Valeriia Zanina and Alena Fenogenova},
+  year         = {2025},
+  eprint       = {2505.24616},
+  archivePrefix = {arXiv},
+  primaryClass = {cs.CL},
+  url          = {https://arxiv.org/abs/2505.24616}
 }
 ```
 
