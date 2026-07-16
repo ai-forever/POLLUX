@@ -1,0 +1,2261 @@
+<meta charset="UTF-8">
+<title>POLLUX Judge — Interactive Demo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root {
+    --bg: #F6F7F9;
+    --surface: #FFFFFF;
+    --surface-sunken: #F0F1F4;
+    --text: #16181D;
+    --text-muted: #5B6270;
+    --text-faint: #8A90A0;
+    --border: #E2E5EA;
+    --border-strong: #CBD0D9;
+
+    --primary: oklch(48% 0.15 265);
+    --primary-dark: oklch(38% 0.15 265);
+    --primary-light: oklch(94% 0.025 265);
+
+    --score-poor: oklch(52% 0.17 25);
+    --score-poor-bg: oklch(95% 0.03 25);
+    --score-partial: oklch(58% 0.14 75);
+    --score-partial-bg: oklch(95% 0.04 75);
+    --score-good: oklch(50% 0.13 150);
+    --score-good-bg: oklch(94% 0.035 150);
+
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+
+    --text-xs: 12px;
+    --text-sm: 13px;
+    --text-base: 15px;
+    --text-lg: 17px;
+    --text-xl: 20px;
+    --text-2xl: 26px;
+    --text-3xl: 34px;
+
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 40px;
+    --space-2xl: 64px;
+
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+
+    --shadow-sm: 0 1px 2px rgba(20, 22, 30, 0.06);
+    --shadow-md: 0 4px 16px rgba(20, 22, 30, 0.08);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #101216;
+      --surface: #16181E;
+      --surface-sunken: #1C1F26;
+      --text: #EDEEF2;
+      --text-muted: #A0A6B4;
+      --text-faint: #6B7180;
+      --border: #2A2D36;
+      --border-strong: #3A3E4A;
+
+      --primary: oklch(72% 0.13 265);
+      --primary-dark: oklch(62% 0.14 265);
+      --primary-light: oklch(24% 0.05 265);
+
+      --score-poor: oklch(70% 0.16 25);
+      --score-poor-bg: oklch(24% 0.06 25);
+      --score-partial: oklch(75% 0.13 75);
+      --score-partial-bg: oklch(24% 0.06 75);
+      --score-good: oklch(70% 0.13 150);
+      --score-good-bg: oklch(22% 0.05 150);
+
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #101216; --surface: #16181E; --surface-sunken: #1C1F26;
+    --text: #EDEEF2; --text-muted: #A0A6B4; --text-faint: #6B7180;
+    --border: #2A2D36; --border-strong: #3A3E4A;
+    --primary: oklch(72% 0.13 265); --primary-dark: oklch(62% 0.14 265); --primary-light: oklch(24% 0.05 265);
+    --score-poor: oklch(70% 0.16 25); --score-poor-bg: oklch(24% 0.06 25);
+    --score-partial: oklch(75% 0.13 75); --score-partial-bg: oklch(24% 0.06 75);
+    --score-good: oklch(70% 0.13 150); --score-good-bg: oklch(22% 0.05 150);
+  }
+  :root[data-theme="light"] {
+    --bg: #F6F7F9; --surface: #FFFFFF; --surface-sunken: #F0F1F4;
+    --text: #16181D; --text-muted: #5B6270; --text-faint: #8A90A0;
+    --border: #E2E5EA; --border-strong: #CBD0D9;
+    --primary: oklch(48% 0.15 265); --primary-dark: oklch(38% 0.15 265); --primary-light: oklch(94% 0.025 265);
+    --score-poor: oklch(52% 0.17 25); --score-poor-bg: oklch(95% 0.03 25);
+    --score-partial: oklch(58% 0.14 75); --score-partial-bg: oklch(95% 0.04 75);
+    --score-good: oklch(50% 0.13 150); --score-good-bg: oklch(94% 0.035 150);
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  body { text-wrap: pretty; }
+
+  button { font-family: inherit; }
+  textarea, input, select { font-family: inherit; font-size: inherit; color: inherit; }
+
+  a { color: var(--primary); }
+
+  :focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  .page {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: var(--space-xl) var(--space-lg) var(--space-2xl);
+  }
+
+  /* ---------- Header ---------- */
+  header.topbar {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-xl);
+    flex-wrap: wrap;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+  }
+  .brand-mark {
+    width: 40px; height: 40px;
+    border-radius: var(--radius-md);
+    background: var(--primary);
+    display: flex; align-items: center; justify-content: center;
+    color: white;
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: var(--text-lg);
+    flex-shrink: 0;
+  }
+  .brand-text h1 {
+    margin: 0;
+    font-size: var(--text-xl);
+    font-weight: 650;
+    letter-spacing: -0.01em;
+  }
+  .brand-text p {
+    margin: 2px 0 0;
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+
+  /* ---------- Intro ---------- */
+  .intro {
+    max-width: 720px;
+    margin-bottom: var(--space-xl);
+  }
+  .intro h2 {
+    font-size: var(--text-2xl);
+    line-height: 1.2;
+    margin: 0 0 var(--space-sm);
+    letter-spacing: -0.015em;
+  }
+  .intro p {
+    font-size: var(--text-base);
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  /* ---------- Scenario tabs ---------- */
+  .tablist {
+    display: flex;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-lg);
+    flex-wrap: wrap;
+  }
+  .tab {
+    appearance: none;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-muted);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: 999px;
+    font-size: var(--text-sm);
+    font-weight: 550;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+  .tab:hover { border-color: var(--border-strong); color: var(--text); }
+  .tab[aria-selected="true"] {
+    background: var(--text);
+    border-color: var(--text);
+    color: var(--bg);
+  }
+  .tab-index {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    opacity: 0.6;
+  }
+
+  /* ---------- Interactive judge ---------- */
+  #view-try[hidden] { display: none; }
+  #jsonl-batch-panel { margin-top: var(--space-xl); margin-bottom: var(--space-lg); }
+
+  /* ---------- Mode switch ---------- */
+  .mode-switch {
+    display: inline-flex;
+    gap: 3px;
+    background: var(--surface-sunken);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 3px;
+    margin-bottom: var(--space-lg);
+  }
+  .mode-btn {
+    appearance: none;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: 7px;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .mode-btn:hover { color: var(--text); }
+  .mode-btn[aria-pressed="true"] {
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: var(--shadow-sm);
+  }
+  #view-report[hidden] { display: none; }
+
+  /* ---------- Report tables ---------- */
+  .report-panel { margin-bottom: var(--space-lg); }
+  .report-panel .panel-header { align-items: center; }
+  .batch-table-wrap { overflow-x: auto; }
+  .batch-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+  }
+  .batch-table th {
+    text-align: left;
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--text-faint);
+    font-weight: 600;
+    padding: var(--space-sm) var(--space-md);
+    border-bottom: 1px solid var(--border-strong);
+  }
+  .batch-table td {
+    padding: var(--space-sm) var(--space-md);
+    border-bottom: 1px solid var(--border);
+    color: var(--text-muted);
+  }
+  .batch-table tbody tr:last-child td { border-bottom: none; }
+  .batch-table td:first-child { color: var(--text); }
+  .batch-table td.not-scored { color: var(--text-faint); font-style: italic; }
+
+  /* ---------- File loader ---------- */
+  .drop-zone {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+    background: var(--surface-sunken);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius-sm);
+    padding: var(--space-md);
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  .drop-zone.dragover {
+    border-color: var(--primary);
+    background: var(--primary-light);
+  }
+  .drop-zone input[type="file"] {
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+    max-width: 100%;
+  }
+  .drop-zone-hint {
+    margin: 0;
+    font-size: var(--text-xs);
+    color: var(--text-faint);
+  }
+  .loaded-files {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    margin-top: var(--space-md);
+  }
+  .loaded-files:empty { margin-top: 0; }
+  .file-chip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    background: var(--surface-sunken);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--text-sm);
+  }
+  .file-chip .file-chip-name { font-family: var(--font-mono); color: var(--text); }
+  .file-chip .file-chip-meta { color: var(--text-faint); font-size: var(--text-xs); }
+  .file-chip .file-chip-remove {
+    appearance: none;
+    border: 1px solid var(--border-strong);
+    background: var(--surface);
+    color: var(--text-muted);
+    font-size: var(--text-xs);
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+  .file-chip .file-chip-remove:hover { color: var(--score-poor); border-color: var(--score-poor); }
+  .file-chip.file-chip-error { border-color: var(--score-poor); background: var(--score-poor-bg); }
+  .file-chip.file-chip-error .file-chip-meta { color: var(--score-poor); }
+
+  .item-row { cursor: pointer; transition: background 0.15s ease; }
+  .item-row:hover { background: var(--surface-sunken); }
+  .item-row .expand-toggle {
+    color: var(--text-faint);
+    font-size: var(--text-xs);
+    width: 16px;
+  }
+  .item-detail td {
+    background: var(--surface-sunken);
+    padding: var(--space-md);
+    border-bottom: 1px solid var(--border);
+  }
+  .detail-block { margin-bottom: var(--space-sm); }
+  .detail-block strong {
+    display: block;
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--text-faint);
+    margin-bottom: 2px;
+  }
+  .detail-block p { margin: 0; font-size: var(--text-sm); color: var(--text); }
+  .detail-reasoning {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    margin-top: var(--space-xs);
+  }
+  .detail-reasoning strong { color: var(--text); }
+  .open-in-judge-btn {
+    appearance: none;
+    border: 1px solid var(--primary);
+    background: var(--primary-light);
+    color: var(--primary);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    margin-top: var(--space-sm);
+    transition: background 0.2s ease;
+  }
+  .open-in-judge-btn:hover { background: var(--primary); color: white; }
+
+  .table-pager {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    margin-top: var(--space-md);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--border);
+    font-size: var(--text-xs);
+    color: var(--text-faint);
+  }
+  .table-pager .pager-count { font-family: var(--font-mono); }
+  .table-pager .pager-controls { display: flex; align-items: center; gap: var(--space-sm); }
+  .table-pager button {
+    appearance: none;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-muted);
+    font-size: var(--text-xs);
+    padding: 4px 10px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+  .table-pager button:hover:not(:disabled) { color: var(--text); border-color: var(--border-strong); }
+  .table-pager button:disabled { opacity: 0.4; cursor: not-allowed; }
+  .table-pager .pager-page { font-family: var(--font-mono); }
+
+
+  /* ---------- Panel shell ---------- */
+  .scenario-panel[hidden] { display: none; }
+  .scenario-desc {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    margin: 0 0 var(--space-lg);
+    max-width: 640px;
+  }
+  .scenario-desc.field-spec {
+    max-width: 760px;
+  }
+  .scenario-desc.field-spec p {
+    margin: 0 0 var(--space-sm);
+  }
+  .field-spec-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+    margin: 0 0 var(--space-sm);
+  }
+  .field-spec-table td {
+    padding: var(--space-xs) var(--space-sm);
+    border-bottom: 1px solid var(--border);
+    color: var(--text-muted);
+    vertical-align: top;
+  }
+  .field-spec-table tr:last-child td { border-bottom: none; }
+  .field-spec-table td:first-child {
+    white-space: nowrap;
+    color: var(--text);
+  }
+  .field-spec-tag {
+    display: inline-block;
+    margin-left: var(--space-xs);
+    padding: 1px 6px;
+    border-radius: 999px;
+    background: var(--border);
+    color: var(--text-faint);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    vertical-align: middle;
+  }
+  .judge-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--space-lg);
+    align-items: start;
+  }
+  @media (max-width: 800px) {
+    .judge-grid { grid-template-columns: minmax(0, 1fr); }
+  }
+
+  .panel {
+    min-width: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    padding: var(--space-lg);
+  }
+  .panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-md);
+  }
+  .panel-title {
+    font-size: var(--text-sm);
+    font-weight: 650;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-faint);
+    margin: 0;
+  }
+
+  .field { margin-bottom: var(--space-md); }
+  .field:last-child { margin-bottom: 0; }
+  .field label {
+    display: block;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: var(--space-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .field-fieldset {
+    border: none;
+    padding: 0;
+    margin: 0 0 var(--space-md);
+  }
+  .field-fieldset legend {
+    padding: 0;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: var(--space-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .field label .field-optional {
+    text-transform: none;
+    font-weight: 500;
+    letter-spacing: 0;
+    color: var(--text-faint);
+  }
+  .radio-row {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+  .radio-option {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-sm);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    text-transform: none;
+    color: var(--text);
+    cursor: pointer;
+  }
+  .radio-option input[type="radio"] { flex-shrink: 0; margin: 0; accent-color: var(--primary); }
+  .field textarea {
+    width: 100%;
+    resize: vertical;
+    min-height: 64px;
+    background: var(--surface-sunken);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: var(--space-sm) var(--space-md);
+    color: var(--text);
+    line-height: 1.5;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  .field textarea:hover { border-color: var(--border-strong); }
+  .field textarea:focus {
+    outline: 2px solid var(--primary);
+    outline-offset: -1px;
+    background: var(--surface);
+  }
+  .field.mono textarea { font-family: var(--font-mono); font-size: var(--text-sm); }
+
+  .field input[type="text"] {
+    width: 100%;
+    background: var(--surface-sunken);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: var(--space-sm) var(--space-md);
+    color: var(--text);
+    line-height: 1.5;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  .field input[type="text"]:hover { border-color: var(--border-strong); }
+  .field input[type="text"]:focus {
+    outline: 2px solid var(--primary);
+    outline-offset: -1px;
+    background: var(--surface);
+  }
+
+  .rubric-note {
+    font-size: var(--text-xs);
+    color: var(--text-faint);
+    margin: var(--space-md) 0 0;
+  }
+
+  .run-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    margin-top: var(--space-lg);
+    flex-wrap: wrap;
+  }
+  .btn-run {
+    appearance: none;
+    border: none;
+    background: var(--primary);
+    color: white;
+    font-size: var(--text-base);
+    font-weight: 600;
+    padding: 11px 22px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+  .btn-run:hover { background: var(--primary-dark); }
+  .btn-run:active { transform: scale(0.98); }
+  .btn-run:disabled { opacity: 0.6; cursor: not-allowed; }
+  .btn-run .spinner {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-top-color: white;
+    animation: spin 0.7s linear infinite;
+    display: none;
+  }
+  .btn-run.loading .spinner { display: inline-block; }
+  .btn-run.loading .btn-label::after { content: "Scoring…"; }
+  .btn-run .btn-label::after { content: "Run Judge"; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .demo-note {
+    font-size: var(--text-xs);
+    color: var(--text-faint);
+  }
+
+  .validation-status {
+    margin-top: var(--space-sm);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+    animation: rise 0.2s ease;
+  }
+  .validation-status[hidden] { display: none; }
+  .validation-status.checking {
+    background: var(--surface-sunken);
+    border-color: var(--border);
+    color: var(--text-muted);
+  }
+  .validation-status.valid {
+    background: var(--score-good-bg);
+    border-color: var(--score-good);
+    color: var(--score-good);
+  }
+  .validation-status.invalid,
+  .validation-status.error {
+    background: var(--score-poor-bg);
+    border-color: var(--score-poor);
+    color: var(--score-poor);
+  }
+
+  /* ---------- Output panel ---------- */
+  .output-idle {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-sm);
+    padding: var(--space-xl) 0;
+    color: var(--text-faint);
+    font-size: var(--text-sm);
+  }
+  .output-result[hidden], .output-idle[hidden] { display: none; }
+  .output-result {
+    animation: rise 0.25s ease;
+  }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .score-badge {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-md);
+  }
+  .score-badge .score-value {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: var(--text-3xl);
+    color: var(--primary);
+    line-height: 1;
+  }
+  .score-badge .score-scale-label {
+    font-size: var(--text-xs);
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  .rationale {
+    font-size: var(--text-base);
+    line-height: 1.55;
+    margin: 0 0 var(--space-md);
+  }
+  .result-meta {
+    display: flex;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--text-faint);
+    margin-bottom: var(--space-md);
+  }
+
+  /* pairwise-specific */
+  .sbs-answers {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-md);
+  }
+  .sbs-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    background: var(--surface-sunken);
+    transition: border-color 0.2s ease, background 0.2s ease;
+    position: relative;
+  }
+  .sbs-card .sbs-label {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--text-faint);
+    margin-bottom: var(--space-sm);
+    display: block;
+  }
+  .sbs-card p { margin: 0; font-size: var(--text-sm); line-height: 1.5; }
+  .sbs-card.winner {
+    border-color: var(--score-good);
+    background: var(--score-good-bg);
+  }
+  .sbs-card.winner .sbs-label { color: var(--score-good); }
+  .winner-badge {
+    position: absolute;
+    top: -9px; right: var(--space-md);
+    background: var(--score-good);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding: 3px 8px;
+    border-radius: 999px;
+  }
+
+  details.raw {
+    margin-top: var(--space-md);
+    border-top: 1px solid var(--border);
+    padding-top: var(--space-md);
+  }
+  details.raw summary {
+    cursor: pointer;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--text-muted);
+    user-select: none;
+  }
+  details.raw summary:hover { color: var(--text); }
+  .raw-json {
+    margin-top: var(--space-sm);
+    position: relative;
+  }
+  .raw-json pre {
+    background: var(--surface-sunken);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: var(--space-md);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.6;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    margin: 0;
+    color: var(--text-muted);
+  }
+  .copy-btn {
+    position: absolute;
+    top: var(--space-sm); right: var(--space-sm);
+    appearance: none;
+    border: 1px solid var(--border-strong);
+    background: var(--surface);
+    color: var(--text-muted);
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  .copy-btn:hover { color: var(--text); }
+
+  /* ---------- Grounding strip ---------- */
+  .grounding {
+    margin-top: var(--space-2xl);
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm) var(--space-lg);
+    flex-wrap: wrap;
+    font-size: var(--text-xs);
+    color: var(--text-faint);
+    text-align: center;
+  }
+  .grounding strong { color: var(--text-muted); font-family: var(--font-mono); font-weight: 700; }
+  .grounding .sep { opacity: 0.4; }
+</style>
+
+<div class="page">
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">P</div>
+      <div class="brand-text">
+        <h1>Pollux-4B-Judge</h1>
+        <p>Criteria-based LLM-as-a-Judge ·
+          <a href="https://huggingface.co/ai-forever/Pollux-4B-Judge" target="_blank" rel="noopener">Hugging Face</a>
+        </p>
+      </div>
+    </div>
+  </header>
+
+  <div class="intro">
+    <h2>One answer, many criteria.</h2>
+    <p>POLLUX doesn't score an answer with a single holistic preference. Every request pairs an instruction and a response with a specific, rubric-defined criterion — so the same answer can be judged excellent on one axis and poor on another. Try it below with a live request panel across three evaluation scenarios.</p>
+  </div>
+
+  <div class="mode-switch" role="group" aria-label="View">
+    <button type="button" class="mode-btn" data-view="try" aria-pressed="true">Interactive Judge</button>
+    <button type="button" class="mode-btn" data-view="report" aria-pressed="false">Batch Report</button>
+  </div>
+
+  <div id="view-try">
+
+  <div class="tablist" role="tablist" aria-label="Evaluation scenario">
+    <button class="tab" role="tab" data-scenario="pointwise" aria-selected="true"><span class="tab-index">01</span> Pointwise</button>
+    <button class="tab" role="tab" data-scenario="rag" aria-selected="false"><span class="tab-index">02</span> RAG Faithfulness</button>
+    <button class="tab" role="tab" data-scenario="sbs" aria-selected="false"><span class="tab-index">03</span> Side-by-Side</button>
+    <button class="tab" role="tab" data-scenario="agent" aria-selected="false"><span class="tab-index">04</span> Agent / Tool-use</button>
+  </div>
+
+  <!-- ============ POINTWISE ============ -->
+  <section class="scenario-panel" id="panel-pointwise" data-panel="pointwise">
+    <p class="scenario-desc">Score a single answer independently against a chosen criterion.</p>
+    <div class="judge-grid">
+      <div class="panel">
+        <div class="panel-header"><p class="panel-title">Judge Request</p></div>
+
+        <div class="field">
+          <label for="pw-instruction">Instruction</label>
+          <textarea id="pw-instruction" rows="2">Explain, in two sentences, for a curious 10-year-old, why the sky looks blue.</textarea>
+        </div>
+        <div class="field">
+          <label for="pw-reference">Reference answer <span class="field-optional">(optional — blank runs reference-free)</span></label>
+          <textarea id="pw-reference" rows="1" placeholder="Leave blank for reference-free scoring"></textarea>
+        </div>
+        <div class="field">
+          <label for="pw-answer">Answer</label>
+          <textarea id="pw-answer" rows="4">Sunlight contains a range of wavelengths, and atmospheric gas molecules scatter the shorter ones far more strongly, in proportion to the inverse fourth power of wavelength. The diffuse skylight is therefore dominated by the short-wavelength blue component rather than violet, because solar emission is weaker at violet wavelengths and human photopic vision is comparatively insensitive in that band.</textarea>
+        </div>
+        <div class="field">
+          <label for="pw-criterion">Criterion</label>
+          <input type="text" id="pw-criterion" value="Factual Accuracy">
+        </div>
+        <div class="field mono">
+          <label for="pw-rubric">Rubric</label>
+          <textarea id="pw-rubric" rows="4">0: The answer contains a factual error, or no answer is given.
+
+1: The answer is incomplete — part of the required information is missing or unaddressed.
+
+2: The answer matches the correct facts, or is equivalent to them.</textarea>
+        </div>
+
+        <div class="run-row">
+          <button class="btn-run" data-run="pointwise"><span class="spinner"></span><span class="btn-label"></span></button>        </div>
+        <div class="validation-status" id="pw-validation" hidden></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header"><p class="panel-title">Judge Response</p></div>
+        <div class="output-idle" id="pw-idle">Set an instruction, answer, criterion, and rubric, then run the judge.</div>
+        <div class="output-result" id="pw-result" hidden></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ RAG ============ -->
+  <section class="scenario-panel" id="panel-rag" data-panel="rag" hidden>
+    <p class="scenario-desc">Check whether an answer is faithful to retrieved context — the same interface used for RAG faithfulness checks.</p>
+    <div class="judge-grid">
+      <div class="panel">
+        <div class="panel-header"><p class="panel-title">Judge Request</p></div>
+        <div class="field">
+          <label for="rag-instruction">Instruction</label>
+          <textarea id="rag-instruction" rows="2">What time does the store close on weekdays?</textarea>
+        </div>
+        <div class="field">
+          <label for="rag-reference">Reference answer <span class="field-optional">(optional — blank runs reference-free)</span></label>
+          <textarea id="rag-reference" rows="1" placeholder="Leave blank for reference-free scoring"></textarea>
+        </div>
+        <div class="field mono">
+          <label for="rag-context">Retrieved context</label>
+          <textarea id="rag-context" rows="3">Store Hours: Monday through Friday, 9am to 5pm. Saturday and Sunday: closed.</textarea>
+        </div>
+        <div class="field">
+          <label for="rag-answer">Answer</label>
+          <textarea id="rag-answer" rows="2">The store closes at 9pm on weekdays.</textarea>
+        </div>
+        <div class="field">
+          <label for="rag-criterion">Criterion</label>
+          <input type="text" id="rag-criterion" value="Faithfulness to Retrieved Context">
+        </div>
+        <div class="field mono">
+          <label for="rag-rubric">Rubric</label>
+          <textarea id="rag-rubric" rows="4">0: The answer contradicts the retrieved context, or the context is ignored.
+
+1: The answer is partially supported by the context but omits a relevant qualifying detail.
+
+2: The answer is fully supported by, and consistent with, the retrieved context.</textarea>
+        </div>
+        <div class="run-row">
+          <button class="btn-run" data-run="rag"><span class="spinner"></span><span class="btn-label"></span></button>        </div>
+        <div class="validation-status" id="rag-validation" hidden></div>
+      </div>
+      <div class="panel">
+        <div class="panel-header"><p class="panel-title">Judge Response</p></div>
+        <div class="output-idle" id="rag-idle">Set the context, instruction, and answer, then run the judge.</div>
+        <div class="output-result" id="rag-result" hidden></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SIDE BY SIDE ============ -->
+  <section class="scenario-panel" id="panel-sbs" data-panel="sbs" hidden>
+    <p class="scenario-desc">Compare two candidate answers directly — used for release comparisons and model-vs-model evaluation.</p>
+    <div class="judge-grid">
+      <div class="panel">
+        <div class="panel-header"><p class="panel-title">Judge Request</p></div>
+        <div class="field">
+          <label for="sbs-instruction">Instruction</label>
+          <textarea id="sbs-instruction" rows="2">Write a one-sentence apology to a customer whose order arrived three days late.</textarea>
+        </div>
+        <div class="field">
+          <label for="sbs-a">Answer 1</label>
+          <textarea id="sbs-a" rows="2">I'm sorry your order arrived three days late — that's on us, and I've refunded the shipping cost.</textarea>
+        </div>
+        <div class="field">
+          <label for="sbs-b">Answer 2</label>
+          <textarea id="sbs-b" rows="2">Sorry, the courier was slow this week.</textarea>
+        </div>
+        <div class="field mono">
+          <label for="sbs-rubric">Rubric</label>
+          <textarea id="sbs-rubric" rows="4">-1: Answer 1 better satisfies the criterion.
+
+0: The two answers are equally good.
+
+1: Answer 2 better satisfies the criterion.</textarea>
+        </div>
+        <p class="rubric-note">Pollux-4B-Judge's real pairwise template has no reference_answer and no separate criteria_name — this view sends a single comparison call with instruction, answer_1, answer_2, and rubrics.</p>
+        <div class="run-row">
+          <button class="btn-run" data-run="sbs"><span class="spinner"></span><span class="btn-label"></span></button>        </div>
+        <div class="validation-status" id="sbs-validation" hidden></div>
+      </div>
+      <div class="panel">
+        <div class="panel-header"><p class="panel-title">Judge Response</p></div>
+        <div class="output-idle" id="sbs-idle">Set both answers, then run the judge to see which is preferred.</div>
+        <div class="output-result" id="sbs-result" hidden></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ AGENT / TOOL-USE ============ -->
+  <section class="scenario-panel" id="panel-agent" data-panel="agent" hidden>
+    <p class="scenario-desc">Evaluate an agent's tool-call trace against the user's request — the same schema extends to tool-use and agent evaluation.</p>
+    <div class="judge-grid">
+      <div class="panel">
+        <div class="panel-header"><p class="panel-title">Judge Request</p></div>
+        <div class="field">
+          <label for="agent-instruction">Instruction</label>
+          <textarea id="agent-instruction" rows="2">Book a table for 4 people tonight at 7pm at an Italian restaurant near downtown.</textarea>
+        </div>
+        <div class="field">
+          <label for="agent-reference">Reference answer <span class="field-optional">(optional — blank runs reference-free)</span></label>
+          <textarea id="agent-reference" rows="1" placeholder="Leave blank for reference-free scoring"></textarea>
+        </div>
+        <div class="field mono">
+          <label for="agent-trace">Tool-call trace <span class="field-optional">(this is the answer being judged)</span></label>
+          <textarea id="agent-trace" rows="6">1. search_restaurants(cuisine="italian", area="downtown")
+   -> [{"name":"Trattoria Bellini","distance_km":0.6}, {"name":"Nonna's Table","distance_km":1.1}]
+2. check_availability(restaurant="Trattoria Bellini", time="19:00", party_size=4)
+   -> {"available": true}
+3. book_table(restaurant="Trattoria Bellini", time="19:00", party_size=4)
+   -> {"confirmation":"BEL-7743"}</textarea>
+        </div>
+        <div class="field">
+          <label for="agent-criterion">Criterion</label>
+          <input type="text" id="agent-criterion" value="Tool-Call Correctness">
+        </div>
+        <div class="field mono">
+          <label for="agent-rubric">Rubric</label>
+          <textarea id="agent-rubric" rows="4">0: An unnecessary or incorrect tool is called, or an action is taken without checking required preconditions.
+
+1: The correct tools are called, but a parameter does not match the request.
+
+2: The tool sequence and parameters fully match the request, with preconditions verified before acting.</textarea>
+        </div>
+        <div class="run-row">
+          <button class="btn-run" data-run="agent"><span class="spinner"></span><span class="btn-label"></span></button>        </div>
+        <div class="validation-status" id="agent-validation" hidden></div>
+      </div>
+      <div class="panel">
+        <div class="panel-header"><p class="panel-title">Judge Response</p></div>
+        <div class="output-idle" id="agent-idle">Set the instruction and trace, then run the judge.</div>
+        <div class="output-result" id="agent-result" hidden></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel report-panel" id="jsonl-batch-panel">
+    <div class="panel-header">
+      <p class="panel-title">Score a JSONL batch</p>
+    </div>
+    <p class="scenario-desc" id="jsonl-format-note"></p>
+    <fieldset class="field field-fieldset">
+      <legend>Criterion &amp; rubric source</legend>
+      <div class="radio-row">
+        <label class="radio-option">
+          <input type="radio" name="jsonl-criterion-source" value="fields" checked>
+          Use the fields above <span class="field-optional">(same criterion for every row)</span>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="jsonl-criterion-source" value="jsonl">
+          Read from each row <span class="field-optional">(criteria_name / criteria_rubrics per row)</span>
+        </label>
+      </div>
+    </fieldset>
+    <div class="field">
+      <label for="jsonl-input">Input JSONL <span class="field-optional">(one JSON object per line)</span></label>
+      <div class="drop-zone" id="jsonl-drop-zone">
+        <input type="file" id="jsonl-input" accept=".jsonl,.json,.txt">
+        <p class="drop-zone-hint">or drag a file here</p>
+      </div>
+    </div>
+    <div class="run-row">
+      <button class="btn-run" id="jsonl-run" type="button" disabled><span class="spinner"></span><span class="btn-label"></span></button>
+      <span class="demo-note" id="jsonl-file-status">Choose a JSONL file to score all its rows, using the criterion source selected above.</span>
+    </div>
+    <div class="validation-status" id="jsonl-validation" hidden></div>
+  </section>
+
+  </div>
+
+  <div id="view-report" hidden>
+
+    <div class="scenario-desc field-spec">
+      <p>Load .jsonl files, one JSON object per line. Nothing below is computed until you load a file — no placeholder rows, no numbers without a file behind them.</p>
+      <table class="field-spec-table">
+        <tbody>
+          <tr><td><code>instruction</code></td><td>the task/prompt text</td></tr>
+          <tr><td><code>answer</code></td><td>the response being judged (pairwise rows: <code>answer_1</code> + <code>answer_2</code> instead)</td></tr>
+          <tr><td><code>score</code></td><td>the judge's verdict — rows without a numeric score count as unscored, not dropped</td></tr>
+          <tr><td><code>judge</code><span class="field-spec-tag">optional</span></td><td>tells files apart in the comparison table; falls back to the file name</td></tr>
+          <tr><td><code>scenario</code><span class="field-spec-tag">optional</span></td><td><code>pointwise</code> / <code>rag</code> / <code>sbs</code> / <code>agent</code> — picks the tab "Open in Interactive Judge" opens; defaults to pointwise</td></tr>
+          <tr><td><code>criteria_name</code>, <code>criteria_rubrics</code><span class="field-spec-tag">optional</span></td><td>shown in the row detail</td></tr>
+          <tr><td><code>reference_answer</code>, <code>reasoning</code><span class="field-spec-tag">optional</span></td><td>shown in the row detail if present</td></tr>
+          <tr><td><code>gold_score</code><span class="field-spec-tag">optional</span></td><td>a human label; enables RMSE / macro F1 / Spearman, and accuracy for pairwise rows</td></tr>
+        </tbody>
+      </table>
+      <p>Written in this shape by <code>run_pollux_judge.py</code> / <code>run_selene_judge.py</code>, or by "Score a JSONL batch" above — any file with the same fields works.</p>
+    </div>
+
+    <div class="panel report-panel">
+      <div class="panel-header">
+        <p class="panel-title">Load Judge Results</p>
+      </div>
+
+      <div class="field">
+        <label for="results-input">Result files <span class="field-optional">(one file per judge run — .jsonl, one JSON object per line)</span></label>
+        <div class="drop-zone" id="drop-zone">
+          <input type="file" id="results-input" multiple accept=".jsonl,.json,.txt">
+          <p class="drop-zone-hint">or drag files here</p>
+        </div>
+      </div>
+
+      <div class="validation-status" id="load-status" hidden></div>
+
+      <div class="loaded-files" id="loaded-files"></div>
+    </div>
+
+    <div id="report-empty" class="output-idle">Load one or more result files to see scores here.</div>
+
+    <div id="report-results" hidden>
+      <div class="panel report-panel">
+        <div class="panel-header">
+          <p class="panel-title">Judge Comparison</p>
+          <span class="demo-note">Computed live from loaded files — each judge on its own scale, nothing normalized.</span>
+        </div>
+        <div class="batch-table-wrap">
+          <table class="batch-table" id="judge-summary-table"></table>
+        </div>
+      </div>
+
+      <div class="panel report-panel">
+        <div class="panel-header">
+          <p class="panel-title">Scores by Item</p>
+          <span class="demo-note">Items matched across files by instruction + criterion. Click a row to expand.</span>
+        </div>
+        <div class="field">
+          <label for="table-search">Search <span class="field-optional">(filters by instruction, answer, criterion, or rubric)</span></label>
+          <input type="text" id="table-search" placeholder="e.g. RAG, apology, factual…">
+        </div>
+        <div class="batch-table-wrap">
+          <table class="batch-table" id="loaded-table"></table>
+        </div>
+        <div class="table-pager" id="table-pager"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="grounding">
+    <span>Grounded in the POLLUX benchmark</span>
+    <span class="sep">·</span>
+    <span><strong>35</strong> task groups</span>
+    <span class="sep">·</span>
+    <span><strong>152</strong> task types</span>
+    <span class="sep">·</span>
+    <span><strong>2,115</strong> expert-authored instructions</span>
+    <span class="sep">·</span>
+    <span><strong>66</strong> criteria</span>
+    <span class="sep">·</span>
+    <span><strong>471K</strong> expert labels</span>
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  // ---------- theme sync (for host viewers that stamp data-theme) ----------
+  // no-op here; CSS handles both prefers-color-scheme and [data-theme].
+
+  // ---------- top-level view switch ----------
+  var modeButtons = document.querySelectorAll(".mode-btn");
+  var viewTry = document.getElementById("view-try");
+  var viewReport = document.getElementById("view-report");
+
+  function showView(name) {
+    modeButtons.forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.view === name ? "true" : "false"); });
+    viewTry.hidden = name !== "try";
+    viewReport.hidden = name !== "report";
+    try { localStorage.setItem("pollux-demo-view", name); } catch (e) {}
+  }
+
+  modeButtons.forEach(function (b) {
+    b.addEventListener("click", function () { showView(b.dataset.view); });
+  });
+
+  var savedView = null;
+  try { savedView = localStorage.getItem("pollux-demo-view"); } catch (e) {}
+  showView(savedView || "try");
+
+  // ---------- batch report: load real judge result files ----------
+  (function () {
+    var input = document.getElementById("results-input");
+    var dropZone = document.getElementById("drop-zone");
+    var statusEl = document.getElementById("load-status");
+    var filesEl = document.getElementById("loaded-files");
+    var emptyEl = document.getElementById("report-empty");
+    var resultsEl = document.getElementById("report-results");
+    var tableEl = document.getElementById("loaded-table");
+    var searchInput = document.getElementById("table-search");
+    var pagerEl = document.getElementById("table-pager");
+
+    tableEl.addEventListener("click", function (e) {
+      var openBtn = e.target.closest(".open-in-judge-btn");
+      if (openBtn) {
+        var item = currentItems[openBtn.dataset.key];
+        if (item) openItemInJudge(item);
+        return;
+      }
+      var row = e.target.closest("tr.item-row");
+      if (!row) return;
+      var detail = tableEl.querySelector('tr.item-detail[data-row="' + row.dataset.row + '"]');
+      if (!detail) return;
+      detail.hidden = !detail.hidden;
+      row.querySelector(".expand-toggle").textContent = detail.hidden ? "▸" : "▾";
+    });
+
+    function setFieldValue(id, value) {
+      // Always set (defaulting to "") so opening a new item clears stale
+      // values left over from whatever was previously in this field.
+      var el = document.getElementById(id);
+      if (el) el.value = value || "";
+    }
+
+    function openItemInJudge(item) {
+      showView("try");
+      showScenario(item.scenario);
+
+      if (item.scenario === "sbs") {
+        setFieldValue("sbs-instruction", item.instruction);
+        setFieldValue("sbs-a", item.answer);
+        setFieldValue("sbs-b", item.answer2);
+      } else {
+        var prefix = item.scenario === "rag" ? "rag" : item.scenario === "agent" ? "agent" : "pw";
+        setFieldValue(prefix + "-instruction", item.instruction);
+        setFieldValue(item.scenario === "agent" ? "agent-trace" : prefix + "-answer", item.answer);
+        setFieldValue(prefix + "-reference", item.reference_answer);
+      }
+
+      var criterionPrefix = item.scenario === "pointwise" ? "pw" : item.scenario;
+      if (item.scenario !== "sbs") setFieldValue(criterionPrefix + "-criterion", item.criteria_name);
+      setFieldValue(criterionPrefix + "-rubric", item.criteria_rubrics);
+
+      resetOutput(item.scenario);
+      var validationEl = document.getElementById(criterionPrefix + "-validation");
+      if (validationEl) validationEl.hidden = true;
+    }
+
+    var loadedFiles = []; // { id, name, judge, normalized: [...], error }
+    var fileIdCounter = 0;
+
+    function parseJSONLorArray(text) {
+      var trimmed = text.trim();
+      if (!trimmed) return [];
+      if (trimmed[0] === "[") return JSON.parse(trimmed);
+      return trimmed.split("\n").map(function (l) { return l.trim(); }).filter(Boolean)
+        .map(function (l) { return JSON.parse(l); });
+    }
+
+    var KNOWN_SCENARIOS = ["pointwise", "rag", "sbs", "agent"];
+
+    function normalizeRow(row) {
+      var instruction = row.instruction || row.user_input || "";
+      var criteriaName = row.criteria_name || row.rubric_objective || "";
+      // rubrics: Pollux pairwise field name; rubric: Selene field name
+      var criteriaRubrics = row.criteria_rubrics || row.rubric || row.rubrics || "";
+      // answer_1 / assistant_response_a: real pairwise field names (Pollux / Selene)
+      var answer = row.answer || row.assistant_response || row.assistant_response_a || row.answer_1 || "";
+      var answer2 = row.answer_2 || row.assistant_response_b || "";
+      var referenceAnswer = row.reference_answer || "";
+      var scenario = KNOWN_SCENARIOS.indexOf(row.scenario) !== -1 ? row.scenario : "pointwise";
+      var hasScore = typeof row.score === "number" && !isNaN(row.score);
+      var failed = !!row.parse_error;
+      var nonNumeric = !hasScore && !failed && row.score !== null && row.score !== undefined ? String(row.score) : null;
+      var rawGold = row.gold_score !== undefined ? row.gold_score : row.gold;
+      // gold: numeric only, for RMSE / F1 / Spearman, which are numeric by nature.
+      // rawGold / rawScore: the value exactly as it came, so exact-match accuracy also
+      // works for non-numeric verdicts (e.g. Selene pairwise returns "A" / "B").
+      var gold = typeof rawGold === "number" && !isNaN(rawGold) ? rawGold : null;
+      return {
+        key: instruction + "␟" + criteriaName + "␟" + answer + "␟" + answer2,
+        instruction: instruction,
+        criteria_name: criteriaName,
+        criteria_rubrics: criteriaRubrics,
+        reference_answer: referenceAnswer,
+        scenario: scenario,
+        answer: answer,
+        answer2: answer2,
+        reasoning: row.reasoning || null,
+        score: hasScore ? row.score : null,
+        rawScore: failed ? null : (row.score === undefined ? null : row.score),
+        gold: gold,
+        rawGold: rawGold === undefined ? null : rawGold,
+        nonNumeric: nonNumeric,
+        failed: failed
+      };
+    }
+
+    function inferJudgeName(rawRows, fallback) {
+      for (var i = 0; i < rawRows.length; i++) {
+        if (rawRows[i] && rawRows[i].judge) return rawRows[i].judge;
+      }
+      return fallback;
+    }
+
+    function truncate(s, n) {
+      return s.length > n ? s.slice(0, n - 1) + "…" : s;
+    }
+
+    function handleFiles(fileList) {
+      var files = Array.prototype.slice.call(fileList);
+      if (!files.length) return;
+
+      statusEl.hidden = false;
+      statusEl.className = "validation-status checking";
+      statusEl.textContent = "Reading " + files.length + " file(s)…";
+
+      var pending = files.length;
+      files.forEach(function (file) {
+        var reader = new FileReader();
+        reader.onload = function () {
+          var entry = { id: fileIdCounter++, name: file.name, rowCount: 0, normalized: [], judge: null, error: null };
+          try {
+            var raw = parseJSONLorArray(String(reader.result));
+            if (!raw.length) throw new Error("file is empty");
+            entry.rowCount = raw.length;
+            entry.normalized = raw.map(normalizeRow);
+            entry.judge = inferJudgeName(raw, file.name.replace(/\.(jsonl|json|txt)$/i, ""));
+          } catch (e) {
+            entry.error = "could not parse as JSON/JSONL: " + e.message;
+          }
+          loadedFiles.push(entry);
+          pending--;
+          if (pending === 0) finishLoad();
+        };
+        reader.onerror = function () {
+          loadedFiles.push({ id: fileIdCounter++, name: file.name, rowCount: 0, normalized: [], judge: null, error: "could not read file" });
+          pending--;
+          if (pending === 0) finishLoad();
+        };
+        reader.readAsText(file);
+      });
+    }
+
+    window.loadJudgeResults = function (rawRows, name) {
+      var entry = {
+        id: fileIdCounter++,
+        name: name || "interactive-judge-results.jsonl",
+        rowCount: 0,
+        normalized: [],
+        judge: MODEL_NAME,
+        error: null
+      };
+      try {
+        if (!Array.isArray(rawRows) || !rawRows.length) throw new Error("no result rows");
+        entry.rowCount = rawRows.length;
+        entry.normalized = rawRows.map(normalizeRow);
+        entry.judge = inferJudgeName(rawRows, MODEL_NAME);
+      } catch (e) {
+        entry.error = "could not prepare judge results: " + e.message;
+      }
+      loadedFiles.push(entry);
+      statusEl.hidden = false;
+      statusEl.className = entry.error ? "validation-status invalid" : "validation-status valid";
+      statusEl.textContent = entry.error ? "⚠ " + entry.error : "✓ Added " + entry.rowCount + " live judge result(s).";
+      renderFileChips();
+      renderResults();
+    };
+
+    input.addEventListener("change", function () {
+      handleFiles(input.files);
+      input.value = "";
+    });
+
+    ["dragenter", "dragover"].forEach(function (evt) {
+      dropZone.addEventListener(evt, function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        dropZone.classList.add("dragover");
+      });
+    });
+    ["dragleave", "dragend"].forEach(function (evt) {
+      dropZone.addEventListener(evt, function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        dropZone.classList.remove("dragover");
+      });
+    });
+    dropZone.addEventListener("drop", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      dropZone.classList.remove("dragover");
+      if (e.dataTransfer && e.dataTransfer.files) handleFiles(e.dataTransfer.files);
+    });
+
+    // Missing the drop zone shouldn't navigate the page away to the raw file.
+    ["dragover", "drop"].forEach(function (evt) {
+      window.addEventListener(evt, function (e) { e.preventDefault(); });
+    });
+
+    function updateLoadStatus() {
+      var errCount = loadedFiles.filter(function (f) { return f.error; }).length;
+      if (errCount === 0) {
+        statusEl.className = "validation-status valid";
+        statusEl.textContent = "✓ Loaded " + loadedFiles.length + " file(s).";
+      } else {
+        statusEl.className = "validation-status invalid";
+        statusEl.textContent = "⚠ " + errCount + " of " + loadedFiles.length + " file(s) failed to parse — see list below.";
+      }
+    }
+
+    function finishLoad() {
+      updateLoadStatus();
+      renderFileChips();
+      renderResults();
+    }
+
+    function removeFile(id) {
+      loadedFiles = loadedFiles.filter(function (f) { return f.id !== id; });
+      renderFileChips();
+      renderResults();
+      // Keep the status line in sync — otherwise it keeps claiming the pre-removal count.
+      if (!loadedFiles.length) statusEl.hidden = true;
+      else updateLoadStatus();
+    }
+
+    function renderFileChips() {
+      filesEl.innerHTML = "";
+      loadedFiles.forEach(function (f) {
+        var meta = f.error ? f.error : (f.rowCount + " item(s) · judge: " + f.judge);
+        var chip = document.createElement("div");
+        chip.className = "file-chip" + (f.error ? " file-chip-error" : "");
+        chip.innerHTML =
+          '<span class="file-chip-name">' + escapeHtml(f.name) + '</span>' +
+          '<span class="file-chip-meta">' + escapeHtml(meta) + '</span>' +
+          '<button type="button" class="file-chip-remove" data-remove="' + f.id + '">Remove</button>';
+        filesEl.appendChild(chip);
+      });
+      filesEl.querySelectorAll("[data-remove]").forEach(function (btn) {
+        btn.addEventListener("click", function () { removeFile(Number(btn.dataset.remove)); });
+      });
+    }
+
+    var PAGE_SIZE = 25;
+    var currentItems = {};
+    var currentOrder = [];
+    var currentJudgeNames = [];
+    var currentPage = 1;
+    var searchQuery = "";
+
+    searchInput.addEventListener("input", function () {
+      searchQuery = searchInput.value.trim().toLowerCase();
+      currentPage = 1;
+      renderTablePage();
+    });
+
+    function matchesSearch(item) {
+      if (!searchQuery) return true;
+      return (item.instruction + " " + item.answer + " " + (item.answer2 || "") + " " + item.criteria_name + " " + item.criteria_rubrics).toLowerCase().indexOf(searchQuery) !== -1;
+    }
+
+    // Per-item scores are keyed by judge, so two files carrying the same judge name
+    // (e.g. two "Score a JSONL batch" runs, which both stamp MODEL_NAME) would collide:
+    // duplicate columns, and an overlapping item would silently keep only the last file's
+    // score. Give each file a display name that is unique across the loaded set.
+    function assignDisplayJudgeNames(validFiles) {
+      var nameCounts = {};
+      validFiles.forEach(function (f) { nameCounts[f.judge] = (nameCounts[f.judge] || 0) + 1; });
+
+      var used = {};
+      validFiles.forEach(function (f) {
+        // Only qualify with the file name when the judge name is actually ambiguous,
+        // so the common one-file-per-judge case keeps a clean model name.
+        var base = nameCounts[f.judge] > 1
+          ? f.judge + " (" + f.name.replace(/\.(jsonl|json|txt)$/i, "") + ")"
+          : f.judge;
+        var name = base;
+        var n = 2;
+        while (used[name]) { name = base + " #" + n; n++; }
+        used[name] = true;
+        f.displayJudge = name;
+      });
+    }
+
+    function renderResults() {
+      var validFiles = loadedFiles.filter(function (f) { return !f.error; });
+      if (!validFiles.length) {
+        emptyEl.hidden = false;
+        resultsEl.hidden = true;
+        return;
+      }
+      emptyEl.hidden = true;
+      resultsEl.hidden = false;
+
+      assignDisplayJudgeNames(validFiles);
+
+      currentItems = {};
+      currentOrder = [];
+      validFiles.forEach(function (f) {
+        f.normalized.forEach(function (r) {
+          if (!currentItems[r.key]) {
+            currentItems[r.key] = {
+              instruction: r.instruction,
+              criteria_name: r.criteria_name,
+              criteria_rubrics: r.criteria_rubrics,
+              reference_answer: r.reference_answer,
+              scenario: r.scenario,
+              answer: r.answer,
+              answer2: r.answer2,
+              scores: {}
+            };
+            currentOrder.push(r.key);
+          }
+          currentItems[r.key].scores[f.displayJudge] = r;
+        });
+      });
+      currentJudgeNames = validFiles.map(function (f) { return f.displayJudge; });
+      currentPage = 1;
+      renderTablePage();
+      renderJudgeComparison(validFiles);
+    }
+
+    function rankArray(values) {
+      var indexed = values.map(function (v, i) { return { v: v, i: i }; });
+      indexed.sort(function (a, b) { return a.v - b.v; });
+      var ranks = new Array(values.length);
+      var i = 0;
+      while (i < indexed.length) {
+        var j = i;
+        while (j + 1 < indexed.length && indexed[j + 1].v === indexed[i].v) j++;
+        var avgRank = (i + j) / 2 + 1;
+        for (var k = i; k <= j; k++) ranks[indexed[k].i] = avgRank;
+        i = j + 1;
+      }
+      return ranks;
+    }
+
+    function pearson(xs, ys) {
+      var n = xs.length;
+      var meanX = xs.reduce(function (a, b) { return a + b; }, 0) / n;
+      var meanY = ys.reduce(function (a, b) { return a + b; }, 0) / n;
+      var num = 0, denX = 0, denY = 0;
+      for (var i = 0; i < n; i++) {
+        var dx = xs[i] - meanX, dy = ys[i] - meanY;
+        num += dx * dy; denX += dx * dx; denY += dy * dy;
+      }
+      if (denX === 0 || denY === 0) return null;
+      return num / Math.sqrt(denX * denY);
+    }
+
+    function computeRMSE(pairs) {
+      var sumSq = pairs.reduce(function (acc, p) { return acc + Math.pow(p.judge - p.gold, 2); }, 0);
+      return Math.sqrt(sumSq / pairs.length);
+    }
+
+    function computeMacroF1(pairs) {
+      var classes = {};
+      pairs.forEach(function (p) { classes[p.gold] = true; classes[p.judge] = true; });
+      var f1s = Object.keys(classes).map(function (cKey) {
+        var c = Number(cKey);
+        var tp = 0, fp = 0, fn = 0;
+        pairs.forEach(function (p) {
+          if (p.judge === c && p.gold === c) tp++;
+          else if (p.judge === c && p.gold !== c) fp++;
+          else if (p.judge !== c && p.gold === c) fn++;
+        });
+        var precision = tp + fp > 0 ? tp / (tp + fp) : 0;
+        var recall = tp + fn > 0 ? tp / (tp + fn) : 0;
+        return precision + recall > 0 ? 2 * precision * recall / (precision + recall) : 0;
+      });
+      return f1s.reduce(function (a, b) { return a + b; }, 0) / f1s.length;
+    }
+
+    function computeSpearman(pairs) {
+      if (pairs.length < 2) return null;
+      return pearson(rankArray(pairs.map(function (p) { return p.judge; })), rankArray(pairs.map(function (p) { return p.gold; })));
+    }
+
+    function renderJudgeComparison(validFiles) {
+      var table = document.getElementById("judge-summary-table");
+      var goldStats = validFiles.map(function (f) {
+        var regularPairs = f.normalized.filter(function (r) { return r.scenario !== "sbs" && r.score !== null && r.gold !== null; })
+          .map(function (r) { return { judge: r.score, gold: r.gold }; });
+        // Pairwise accuracy is an exact match against gold, so it deliberately uses the raw
+        // values rather than the numeric ones — a verdict is a verdict whether the judge
+        // expresses it as -1/0/1 or as "A"/"B".
+        var pairwisePairs = f.normalized.filter(function (r) {
+          return r.scenario === "sbs" && r.rawScore !== null && r.rawGold !== null;
+        }).map(function (r) { return { judge: r.rawScore, gold: r.rawGold }; });
+
+        var regular = null;
+        if (regularPairs.length) {
+          var rho = computeSpearman(regularPairs);
+          regular = {
+            n: regularPairs.length,
+            rmse: computeRMSE(regularPairs).toFixed(2),
+            f1: computeMacroF1(regularPairs).toFixed(2),
+            spearman: rho === null ? "n/a" : rho.toFixed(2)
+          };
+        }
+
+        var pairwise = null;
+        if (pairwisePairs.length) {
+          var correct = pairwisePairs.filter(function (p) {
+            return String(p.judge).trim() === String(p.gold).trim();
+          }).length;
+          pairwise = { n: pairwisePairs.length, accuracy: Math.round(correct / pairwisePairs.length * 100) + "%" };
+        }
+
+        return { regular: regular, pairwise: pairwise };
+      });
+      var hasAnyRegularGold = goldStats.some(function (g) { return g.regular !== null; });
+      var hasAnyPairwiseGold = goldStats.some(function (g) { return g.pairwise !== null; });
+
+      var rows = validFiles.map(function (f, idx) {
+        var scored = f.normalized.filter(function (r) { return r.score !== null; });
+        var nonNumeric = f.normalized.filter(function (r) { return r.nonNumeric !== null; });
+        var failed = f.normalized.filter(function (r) { return r.failed; });
+        var mean = scored.length ? (scored.reduce(function (a, r) { return a + r.score; }, 0) / scored.length).toFixed(2) : "–";
+        var scoresOnly = scored.map(function (r) { return r.score; });
+        var range = scored.length ? Math.min.apply(null, scoresOnly) + "–" + Math.max.apply(null, scoresOnly) : "–";
+        var counts = {};
+        scored.forEach(function (r) { counts[r.score] = (counts[r.score] || 0) + 1; });
+        var dist = Object.keys(counts).sort(function (a, b) { return a - b; })
+          .map(function (k) { return k + "×" + counts[k]; }).join(" · ") || "–";
+
+        var regularCells = "";
+        if (hasAnyRegularGold) {
+          var g = goldStats[idx].regular;
+          regularCells = g
+            ? "<td>" + g.n + "</td><td>" + g.rmse + "</td><td>" + g.f1 + "</td><td>" + g.spearman + "</td>"
+            : "<td>–</td><td>–</td><td>–</td><td>–</td>";
+        }
+        var pairwiseCells = "";
+        if (hasAnyPairwiseGold) {
+          var p = goldStats[idx].pairwise;
+          pairwiseCells = p
+            ? "<td>" + p.n + "</td><td>" + p.accuracy + "</td>"
+            : "<td>–</td><td>–</td>";
+        }
+
+        return "<tr><td>" + escapeHtml(f.displayJudge || f.judge) + "</td><td>" + scored.length + " / " + f.normalized.length +
+          "</td><td>" + mean + "</td><td>" + range + "</td><td>" + dist + "</td><td>" +
+          (nonNumeric.length || "–") + "</td><td>" + (failed.length || "–") + "</td>" + regularCells + pairwiseCells + "</tr>";
+      }).join("");
+
+      var regularHead = hasAnyRegularGold
+        ? "<th>vs Gold (N)</th><th>RMSE↓</th><th>Macro F1↑</th><th>Spearman ρ↑</th>"
+        : "";
+      var pairwiseHead = hasAnyPairwiseGold
+        ? "<th>Pairwise vs Gold (N)</th><th>Pairwise Accuracy↑</th>"
+        : "";
+      table.innerHTML =
+        "<thead><tr><th>Judge</th><th>Items Scored</th><th>Mean Score</th><th>Range</th><th>Distribution</th>" +
+        "<th>Non-numeric</th><th>Unparseable</th>" + regularHead + pairwiseHead + "</tr></thead><tbody>" + rows + "</tbody>";
+    }
+
+    function renderTablePage() {
+      var judgeNames = currentJudgeNames;
+      var colCount = 5 + judgeNames.length;
+      var filtered = currentOrder.filter(function (key) { return matchesSearch(currentItems[key]); });
+      var totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+      if (currentPage > totalPages) currentPage = totalPages;
+      if (currentPage < 1) currentPage = 1;
+      var start = (currentPage - 1) * PAGE_SIZE;
+      var pageKeys = filtered.slice(start, start + PAGE_SIZE);
+
+      var thead = "<thead><tr><th></th><th>Instruction</th><th>Answer</th><th>Criterion</th><th>Rubric</th>" +
+        judgeNames.map(function (j) { return "<th>" + escapeHtml(j) + "</th>"; }).join("") + "</tr></thead>";
+
+      var tbody = "<tbody>" + pageKeys.map(function (key, i) {
+        var item = currentItems[key];
+        var cells = judgeNames.map(function (j) {
+          var r = item.scores[j];
+          if (r === undefined) return '<td class="not-scored">not scored</td>';
+          if (r.score !== null) return "<td>" + r.score + "</td>";
+          if (r.nonNumeric !== null) return '<td class="not-scored">' + escapeHtml(r.nonNumeric) + '</td>';
+          return '<td class="not-scored">unparseable</td>';
+        }).join("");
+        var mainRow = '<tr class="item-row" data-row="' + i + '"><td class="expand-toggle">▸</td><td>' +
+          escapeHtml(truncate(item.instruction, 50)) + '</td><td>' + escapeHtml(truncate(item.answer, 50)) +
+          '</td><td>' + escapeHtml(item.criteria_name) + '</td><td>' + escapeHtml(truncate(item.criteria_rubrics, 40)) + '</td>' + cells + '</tr>';
+
+        var reasoningRows = judgeNames.map(function (j) {
+          var r = item.scores[j];
+          if (!r) return "";
+          var scoreLabel = r.score !== null ? r.score : (r.nonNumeric !== null ? r.nonNumeric : "unparseable");
+          return '<div class="detail-reasoning"><strong>' + escapeHtml(j) + ' (' + escapeHtml(String(scoreLabel)) + ')</strong>' +
+            (r.reasoning ? ': ' + escapeHtml(r.reasoning) : '<span class="field-optional"> — no reasoning field</span>') + '</div>';
+        }).join("");
+        var detailRow = '<tr class="item-detail" data-row="' + i + '" hidden><td></td><td colspan="' + (colCount - 1) + '">' +
+          '<div class="detail-block"><strong>Instruction</strong><p>' + escapeHtml(item.instruction) + '</p></div>' +
+          '<div class="detail-block"><strong>' + (item.answer2 ? "Answer 1" : "Answer") + '</strong><p>' + escapeHtml(item.answer) + '</p></div>' +
+          (item.answer2 ? '<div class="detail-block"><strong>Answer 2</strong><p>' + escapeHtml(item.answer2) + '</p></div>' : '') +
+          '<div class="detail-block"><strong>Criterion</strong><p>' + escapeHtml(item.criteria_name) + '</p></div>' +
+          '<div class="detail-block"><strong>Rubric</strong><p>' + escapeHtml(item.criteria_rubrics) + '</p></div>' +
+          reasoningRows +
+          '<button type="button" class="open-in-judge-btn" data-key="' + escapeHtml(key) + '">Open in Interactive Judge (' + escapeHtml(item.scenario) + ') →</button>' +
+          '</td></tr>';
+
+        return mainRow + detailRow;
+      }).join("") + "</tbody>";
+
+      tableEl.innerHTML = thead + tbody;
+
+      var rangeText = filtered.length === 0 ? "0 of 0" :
+        (start + 1) + "–" + Math.min(start + PAGE_SIZE, filtered.length) + " of " + filtered.length;
+      if (filtered.length !== currentOrder.length) rangeText += " (filtered from " + currentOrder.length + ")";
+      pagerEl.innerHTML =
+        '<span class="pager-count">' + rangeText + '</span>' +
+        '<span class="pager-controls">' +
+        '<button type="button" id="pager-prev"' + (currentPage <= 1 ? " disabled" : "") + '>← Prev</button>' +
+        '<span class="pager-page">page ' + currentPage + ' / ' + totalPages + '</span>' +
+        '<button type="button" id="pager-next"' + (currentPage >= totalPages ? " disabled" : "") + '>Next →</button>' +
+        '</span>';
+      var prevBtn = document.getElementById("pager-prev");
+      var nextBtn = document.getElementById("pager-next");
+      if (prevBtn) prevBtn.addEventListener("click", function () { currentPage--; renderTablePage(); });
+      if (nextBtn) nextBtn.addEventListener("click", function () { currentPage++; renderTablePage(); });
+    }
+  })();
+
+  // ---------- interactive JSONL batch scoring ----------
+  var jsonlInput = document.getElementById("jsonl-input");
+  var jsonlDropZone = document.getElementById("jsonl-drop-zone");
+  var jsonlRunButton = document.getElementById("jsonl-run");
+  var jsonlFileStatus = document.getElementById("jsonl-file-status");
+  var jsonlValidation = document.getElementById("jsonl-validation");
+  var jsonlFormatNote = document.getElementById("jsonl-format-note");
+  var jsonlRows = null;
+  var jsonlFileName = null;
+  var activeScenario = "pointwise";
+
+  var JSONL_BATCH_CONFIG = {
+    pointwise: {
+      prefix: "pw",
+      note: "Required JSONL fields: <code>instruction</code> and <code>answer</code>. Optional: <code>reference_answer</code>, plus <code>criteria_name</code>/<code>criteria_rubrics</code> if reading the criterion from each row."
+    },
+    rag: {
+      prefix: "rag",
+      note: "Required JSONL fields: <code>instruction</code>, <code>answer</code>, and <code>retrieved_context</code>. Optional: <code>reference_answer</code>. Pollux receives <code>retrieved_context</code> together with <code>instruction</code>; add <code>criteria_name</code>/<code>criteria_rubrics</code> per row if reading the criterion from each row."
+    },
+    sbs: {
+      prefix: "sbs",
+      note: "Required JSONL fields: <code>instruction</code>, <code>answer_1</code>, and <code>answer_2</code>. No <code>reference_answer</code> and no separate criterion — add <code>rubrics</code> per row if reading it from each row."
+    },
+    agent: {
+      prefix: "agent",
+      note: "Required JSONL fields: <code>instruction</code> and <code>answer</code> (the tool-call trace). Optional: <code>reference_answer</code>, plus <code>criteria_name</code>/<code>criteria_rubrics</code> if reading the criterion from each row."
+    }
+  };
+
+  function parseJSONL(text) {
+    var trimmed = text.trim();
+    if (!trimmed) return [];
+    if (trimmed[0] === "[") return JSON.parse(trimmed);
+    return trimmed.split("\n").map(function (line) { return line.trim(); }).filter(Boolean)
+      .map(function (line) { return JSON.parse(line); });
+  }
+
+  function valueOrEmpty(value) {
+    return value === null || value === undefined ? "" : String(value);
+  }
+
+  function updateJSONLBatchUI(scenario) {
+    activeScenario = scenario;
+    var config = JSONL_BATCH_CONFIG[scenario];
+    var supported = !!config;
+    jsonlFormatNote.innerHTML = supported ? config.note :
+      "JSONL batch scoring is not available for this scenario.";
+    jsonlInput.disabled = !supported;
+    jsonlRunButton.disabled = !supported || !jsonlRows;
+    if (!supported) {
+      jsonlFileStatus.textContent = "Choose a scenario that supports JSONL batch scoring.";
+    } else if (jsonlRows) {
+      jsonlFileStatus.textContent = jsonlFileName + ": " + jsonlRows.length + " row(s) ready to score.";
+    } else {
+      jsonlFileStatus.textContent = "Choose a JSONL file to score all its rows, using the criterion source selected above.";
+    }
+  }
+
+  function readJSONLFile(file) {
+    if (!file) return;
+    jsonlValidation.hidden = false;
+    jsonlValidation.className = "validation-status checking";
+    jsonlValidation.textContent = "Reading " + file.name + "…";
+    var reader = new FileReader();
+    reader.onload = function () {
+      try {
+        var rows = parseJSONL(String(reader.result));
+        if (!rows.length) throw new Error("file is empty");
+        if (rows.some(function (row) { return !row || Array.isArray(row) || typeof row !== "object"; })) {
+          throw new Error("every line must be a JSON object");
+        }
+        jsonlRows = rows;
+        jsonlFileName = file.name;
+        jsonlValidation.className = "validation-status valid";
+        jsonlValidation.textContent = "✓ Loaded " + rows.length + " JSONL row(s).";
+        updateJSONLBatchUI(activeScenario);
+      } catch (e) {
+        jsonlRows = null;
+        jsonlFileName = null;
+        jsonlValidation.className = "validation-status invalid";
+        jsonlValidation.textContent = "⚠ Could not parse JSONL: " + e.message;
+        updateJSONLBatchUI(activeScenario);
+      }
+    };
+    reader.onerror = function () {
+      jsonlRows = null;
+      jsonlFileName = null;
+      jsonlValidation.className = "validation-status invalid";
+      jsonlValidation.textContent = "⚠ Could not read " + file.name + ".";
+      updateJSONLBatchUI(activeScenario);
+    };
+    reader.readAsText(file);
+  }
+
+  function prepareJSONLCall(row, scenario, criterionSource) {
+    var config = JSONL_BATCH_CONFIG[scenario];
+    var prefix = config.prefix;
+    var instruction = valueOrEmpty(row.instruction);
+    var fromRow = criterionSource === "jsonl";
+    var goldScore = row.gold_score !== undefined ? row.gold_score : (row.gold !== undefined ? row.gold : null);
+
+    if (scenario === "sbs") {
+      var answer1 = valueOrEmpty(row.answer_1 || row.answer);
+      var answer2 = valueOrEmpty(row.answer_2);
+      var rubrics = fromRow
+        ? valueOrEmpty(row.rubrics || row.criteria_rubrics || row.rubric)
+        : document.getElementById("sbs-rubric").value.trim();
+      var missingSbs = [];
+      if (!instruction) missingSbs.push("instruction");
+      if (!answer1) missingSbs.push("answer_1");
+      if (!answer2) missingSbs.push("answer_2");
+      if (!rubrics) missingSbs.push(fromRow ? "rubrics (row)" : "rubric");
+      if (missingSbs.length) return { error: "missing " + missingSbs.join(", ") };
+
+      return {
+        call: { instruction: instruction, answer_1: answer1, answer_2: answer2, rubrics: rubrics },
+        reportRow: {
+          instruction: instruction,
+          answer_1: answer1,
+          answer_2: answer2,
+          rubrics: rubrics,
+          gold_score: goldScore,
+          scenario: scenario
+        }
+      };
+    }
+
+    var answer = valueOrEmpty(row.answer);
+    var retrievedContext = valueOrEmpty(row.retrieved_context);
+    var referenceAnswer = valueOrEmpty(row.reference_answer);
+    var criteriaName = fromRow
+      ? valueOrEmpty(row.criteria_name || row.rubric_objective)
+      : document.getElementById(prefix + "-criterion").value.trim();
+    var criteriaRubrics = fromRow
+      ? valueOrEmpty(row.criteria_rubrics || row.rubric)
+      : document.getElementById(prefix + "-rubric").value.trim();
+    var missing = [];
+
+    if (!instruction) missing.push("instruction");
+    if (!answer) missing.push("answer");
+    if (scenario === "rag" && !retrievedContext) missing.push("retrieved_context");
+    if (!criteriaName) missing.push(fromRow ? "criteria_name (row)" : "criterion");
+    if (!criteriaRubrics) missing.push(fromRow ? "criteria_rubrics (row)" : "rubric");
+    if (missing.length) return { error: "missing " + missing.join(", ") };
+
+    var polluxInstruction = instruction;
+    if (scenario === "rag") {
+      polluxInstruction = retrievedContext + "\n\n" + instruction;
+    }
+
+    return {
+      call: {
+        instruction: polluxInstruction,
+        reference_answer: referenceAnswer || null,
+        answer: answer,
+        criteria_name: criteriaName,
+        criteria_rubrics: criteriaRubrics
+      },
+      reportRow: {
+        instruction: instruction,
+        reference_answer: referenceAnswer || null,
+        answer: answer,
+        retrieved_context: retrievedContext || null,
+        criteria_name: criteriaName,
+        criteria_rubrics: criteriaRubrics,
+        gold_score: goldScore,
+        scenario: scenario
+      }
+    };
+  }
+
+  function scoreJSONLBatch() {
+    var config = JSONL_BATCH_CONFIG[activeScenario];
+    if (!config || !jsonlRows) return;
+
+    var sourceInput = document.querySelector('input[name="jsonl-criterion-source"]:checked');
+    var criterionSource = sourceInput ? sourceInput.value : "fields";
+
+    var prepared = jsonlRows.map(function (row, index) {
+      var item = prepareJSONLCall(row, activeScenario, criterionSource);
+      item.index = index;
+      return item;
+    });
+    var invalid = prepared.filter(function (item) { return item.error; });
+    if (invalid.length) {
+      jsonlValidation.hidden = false;
+      jsonlValidation.className = "validation-status invalid";
+      jsonlValidation.textContent = "⚠ " + invalid.length + " invalid row(s): " +
+        invalid.slice(0, 5).map(function (item) { return "line " + (item.index + 1) + " (" + item.error + ")"; }).join("; ") +
+        (invalid.length > 5 ? "…" : "");
+      return;
+    }
+
+    jsonlRunButton.disabled = true;
+    jsonlRunButton.classList.add("loading");
+    jsonlValidation.hidden = false;
+    jsonlValidation.className = "validation-status checking";
+    jsonlValidation.textContent = "Scoring " + prepared.length + " row(s) with Pollux-4B-Judge…";
+
+    judgeCall(prepared.map(function (item) { return item.call; })).then(function (data) {
+      var results = data.results || [];
+      // Spread reportRow directly (rather than naming fields) so this works for both the
+      // pointwise/rag shape (answer, criteria_name, criteria_rubrics) and the sbs shape
+      // (answer_1, answer_2, rubrics) without duplicating the field list per scenario.
+      var reportRows = results.map(function (result, index) {
+        var original = prepared[index].reportRow;
+        return Object.assign({}, original, {
+          judge: MODEL_NAME,
+          score: result.score,
+          score_raw: result.score_raw,
+          reasoning: result.reasoning,
+          parse_error: result.parse_error,
+          error: result.error || null,
+          latency_ms: result.latency_ms,
+          model: result.model || MODEL_NAME
+        });
+      });
+      var failed = reportRows.filter(function (row) { return row.parse_error; }).length;
+      jsonlRunButton.classList.remove("loading");
+      jsonlRunButton.disabled = false;
+      jsonlValidation.className = failed ? "validation-status invalid" : "validation-status valid";
+      jsonlValidation.textContent = failed ?
+        "⚠ Scored " + reportRows.length + " row(s); " + failed + " response(s) could not be parsed." :
+        "✓ Scored " + reportRows.length + " row(s).";
+      window.loadJudgeResults(reportRows, jsonlFileName.replace(/\.(jsonl|json|txt)$/i, "") + "-pollux-results.jsonl");
+      showView("report");
+    }).catch(function (err) {
+      jsonlRunButton.classList.remove("loading");
+      jsonlRunButton.disabled = false;
+      jsonlValidation.className = "validation-status error";
+      jsonlValidation.textContent = "⚠ " + err.message;
+    });
+  }
+
+  jsonlInput.addEventListener("change", function () {
+    readJSONLFile(jsonlInput.files[0]);
+    jsonlInput.value = "";
+  });
+  ["dragenter", "dragover"].forEach(function (eventName) {
+    jsonlDropZone.addEventListener(eventName, function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      jsonlDropZone.classList.add("dragover");
+    });
+  });
+  ["dragleave", "dragend"].forEach(function (eventName) {
+    jsonlDropZone.addEventListener(eventName, function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      jsonlDropZone.classList.remove("dragover");
+    });
+  });
+  jsonlDropZone.addEventListener("drop", function (event) {
+    event.preventDefault();
+    event.stopPropagation();
+    jsonlDropZone.classList.remove("dragover");
+    if (event.dataTransfer && event.dataTransfer.files) readJSONLFile(event.dataTransfer.files[0]);
+  });
+  jsonlRunButton.addEventListener("click", scoreJSONLBatch);
+
+  // ---------- scenario tabs ----------
+  var tabs = document.querySelectorAll(".tab");
+  var panels = document.querySelectorAll(".scenario-panel");
+
+  function showScenario(name) {
+    tabs.forEach(function (t) {
+      var active = t.dataset.scenario === name;
+      t.setAttribute("aria-selected", active ? "true" : "false");
+    });
+    panels.forEach(function (p) {
+      p.hidden = p.dataset.panel !== name;
+    });
+    updateJSONLBatchUI(name);
+    try { localStorage.setItem("pollux-demo-scenario", name); } catch (e) {}
+  }
+
+  tabs.forEach(function (t) {
+    t.addEventListener("click", function () { showScenario(t.dataset.scenario); });
+  });
+
+  var savedScenario = null;
+  try { savedScenario = localStorage.getItem("pollux-demo-scenario"); } catch (e) {}
+  showScenario(savedScenario || "pointwise");
+
+  // ---------- judge API (proxied by serve_pollux_demo.py) ----------
+  var JUDGE_API = "/api/judge";
+  var MODEL_NAME = "ai-forever/Pollux-4B-Judge";
+
+  function liveJudgeCall(calls) {
+    return fetch(JUDGE_API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ calls: calls })
+    }).then(function (resp) {
+      return resp.json().then(function (data) {
+        if (!resp.ok) throw new Error(data.error || resp.statusText || "Judge request failed");
+        return data;
+      });
+    });
+  }
+
+  function judgeCall(calls) {
+    return liveJudgeCall(calls);
+  }
+
+  function displayScore(score, scoreRaw) {
+    if (score !== null && score !== undefined) return score;
+    // Fall back to the raw model output for display, but capped — an unparsed
+    // response can include a full <think>...</think> block, and this value
+    // gets dropped into a large score badge, so an uncapped fallback can blow
+    // out the layout. The untruncated raw text is still visible in the
+    // rationale and the "View API response" JSON.
+    var raw = (scoreRaw ? String(scoreRaw).trim() : "");
+    if (!raw) return "?";
+    return raw.length > 40 ? raw.slice(0, 40) + "…" : raw;
+  }
+
+  function displayRationale(result) {
+    if (result.error) return "Error: " + result.error;
+    if (result.reasoning) return result.reasoning.trim();
+    if (result.score_raw) return "Model returned: " + result.score_raw;
+    return "No rationale returned by the model.";
+  }
+
+  function resultMetaHTML(criteriaName, latencyMs) {
+    var parts = [];
+    if (criteriaName) parts.push('<span>Criterion: ' + escapeHtml(criteriaName) + '</span>');
+    parts.push('<span>model: ' + escapeHtml(MODEL_NAME) + '</span>');
+    if (typeof latencyMs === "number") parts.push('<span>latency: ' + latencyMs + 'ms</span>');
+    return '<div class="result-meta">' + parts.join("") + '</div>';
+  }
+
+  function inferScaleFromRubric(rubricText) {
+    var matches = (rubricText || "").match(/^\s*-?\d+\s*:/gm);
+    if (!matches || !matches.length) return null;
+    var nums = matches.map(function (m) { return parseInt(m, 10); });
+    var min = Math.min.apply(null, nums), max = Math.max.apply(null, nums);
+    return min + "–" + max;
+  }
+  function scoreBadgeHTML(score, rubricText, scoreRaw) {
+    var scale = inferScaleFromRubric(rubricText);
+    return '<div class="score-badge"><span class="score-value">' + escapeHtml(String(displayScore(score, scoreRaw))) + '</span>' +
+      '<span class="score-scale-label">score' + (scale ? " · rubric scale " + scale : "") + '</span></div>';
+  }
+
+  function escapeHtml(str) {
+    var div = document.createElement("div");
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function jsonBlock(id, obj) {
+    var json = JSON.stringify(obj, null, 2);
+    return '<details class="raw"><summary>View API ' + id + '</summary>' +
+      '<div class="raw-json"><button type="button" class="copy-btn" data-copy>Copy</button>' +
+      '<pre><code>' + escapeHtml(json) + '</code></pre></div></details>';
+  }
+
+  function wireCopyButtons(root) {
+    root.querySelectorAll("[data-copy]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var pre = btn.parentElement.querySelector("pre");
+        navigator.clipboard.writeText(pre.textContent).then(function () {
+          var original = btn.textContent;
+          btn.textContent = "Copied";
+          setTimeout(function () { btn.textContent = original; }, 1400);
+        });
+      });
+    });
+  }
+
+  function resetOutput(name) {
+    var idle = document.getElementById(name === "pointwise" ? "pw-idle" : name + "-idle");
+    var result = document.getElementById(name === "pointwise" ? "pw-result" : name + "-result");
+    if (idle) idle.hidden = false;
+    if (result) { result.hidden = true; result.innerHTML = ""; }
+  }
+
+  // reset pointwise/rag/sbs output whenever request fields are edited
+  ["pw-instruction", "pw-reference", "pw-answer", "pw-criterion", "pw-rubric",
+   "rag-context", "rag-instruction", "rag-reference", "rag-answer", "rag-criterion", "rag-rubric",
+   "sbs-instruction", "sbs-a", "sbs-b", "sbs-rubric",
+   "agent-instruction", "agent-reference", "agent-trace", "agent-criterion", "agent-rubric"].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    var scenario = id.split("-")[0] === "pw" ? "pointwise" : id.split("-")[0];
+    el.addEventListener("input", function () {
+      resetOutput(scenario);
+      var v = document.getElementById((scenario === "pointwise" ? "pw" : scenario) + "-validation");
+      if (v) v.hidden = true;
+    });
+  });
+
+  // ---------- per-scenario format validation ----------
+  var REQUIRED_FIELDS = {
+    pointwise: [["pw-instruction", "Instruction"], ["pw-answer", "Answer"], ["pw-criterion", "Criterion"], ["pw-rubric", "Rubric"]],
+    rag: [["rag-context", "Retrieved context"], ["rag-instruction", "Instruction"], ["rag-answer", "Answer"], ["rag-criterion", "Criterion"], ["rag-rubric", "Rubric"]],
+    sbs: [["sbs-instruction", "Instruction"], ["sbs-a", "Answer 1"], ["sbs-b", "Answer 2"], ["sbs-rubric", "Rubric"]],
+    agent: [["agent-instruction", "Instruction"], ["agent-trace", "Tool-call trace"], ["agent-criterion", "Criterion"], ["agent-rubric", "Rubric"]]
+  };
+  var VALID_MESSAGE = {
+    pointwise: "Valid pointwise format — instruction, answer, criterion, and rubric present.",
+    rag: "Valid RAG format — retrieved context and answer present for faithfulness scoring.",
+    sbs: "Valid pairwise format — instruction, both answers, and comparison scale present.",
+    agent: "Valid tool-use format — instruction and tool-call trace present."
+  };
+
+  function validateScenario(name) {
+    var missing = REQUIRED_FIELDS[name].filter(function (f) {
+      return !document.getElementById(f[0]).value.trim();
+    }).map(function (f) { return f[1]; });
+    return { valid: missing.length === 0, missing: missing };
+  }
+
+  function runJudge(name, btn) {
+    var idlePrefix = name === "pointwise" ? "pw" : name;
+    var idle = document.getElementById(idlePrefix + "-idle");
+    var result = document.getElementById(idlePrefix + "-result");
+    var validationEl = document.getElementById(idlePrefix + "-validation");
+
+    btn.disabled = true;
+    validationEl.hidden = false;
+    validationEl.className = "validation-status checking";
+    validationEl.textContent = "Checking input format…";
+
+    var check = validateScenario(name);
+    if (!check.valid) {
+      validationEl.className = "validation-status invalid";
+      validationEl.textContent = "⚠ Missing required field" + (check.missing.length > 1 ? "s" : "") + ": " + check.missing.join(", ");
+      btn.disabled = false;
+      return;
+    }
+
+    validationEl.className = "validation-status valid";
+    validationEl.textContent = "✓ " + VALID_MESSAGE[name];
+    btn.classList.add("loading");
+    validationEl.className = "validation-status checking";
+    validationEl.textContent = "Calling Pollux-4B-Judge…";
+
+    var calls = [];
+    var requestPayload = null;
+
+    if (name === "pointwise") {
+      requestPayload = {
+        instruction: document.getElementById("pw-instruction").value,
+        reference_answer: document.getElementById("pw-reference").value || null,
+        answer: document.getElementById("pw-answer").value,
+        criteria_name: document.getElementById("pw-criterion").value,
+        criteria_rubrics: document.getElementById("pw-rubric").value
+      };
+      calls = [requestPayload];
+    }
+
+    if (name === "rag") {
+      var context = document.getElementById("rag-context").value;
+      var instr = document.getElementById("rag-instruction").value;
+      requestPayload = {
+        instruction: context + "\n\n" + instr,
+        reference_answer: document.getElementById("rag-reference").value || null,
+        answer: document.getElementById("rag-answer").value,
+        criteria_name: document.getElementById("rag-criterion").value,
+        criteria_rubrics: document.getElementById("rag-rubric").value
+      };
+      calls = [requestPayload];
+    }
+
+    if (name === "sbs") {
+      var instrSbs = document.getElementById("sbs-instruction").value;
+      var sbsRubric = document.getElementById("sbs-rubric").value;
+      requestPayload = {
+        instruction: instrSbs,
+        answer_1: document.getElementById("sbs-a").value,
+        answer_2: document.getElementById("sbs-b").value,
+        rubrics: sbsRubric
+      };
+      calls = [requestPayload];
+    }
+
+    if (name === "agent") {
+      requestPayload = {
+        instruction: document.getElementById("agent-instruction").value,
+        reference_answer: document.getElementById("agent-reference").value || null,
+        answer: document.getElementById("agent-trace").value,
+        criteria_name: document.getElementById("agent-criterion").value,
+        criteria_rubrics: document.getElementById("agent-rubric").value
+      };
+      calls = [requestPayload];
+    }
+
+    judgeCall(calls).then(function (data) {
+      btn.classList.remove("loading");
+      btn.disabled = false;
+      validationEl.className = "validation-status valid";
+      validationEl.textContent = "✓ " + VALID_MESSAGE[name];
+      idle.hidden = true;
+
+      var html = "";
+      var results = data.results || [];
+
+      if (name === "pointwise") {
+        var pw = results[0] || {};
+        html += scoreBadgeHTML(pw.score, requestPayload.criteria_rubrics, pw.score_raw);
+        html += '<p class="rationale">' + escapeHtml(displayRationale(pw)) + '</p>';
+        html += resultMetaHTML(requestPayload.criteria_name, pw.latency_ms);
+        html += jsonBlock("request", requestPayload);
+        html += jsonBlock("response", pw);
+      }
+
+      if (name === "rag") {
+        var d = results[0] || {};
+        html += scoreBadgeHTML(d.score, requestPayload.criteria_rubrics, d.score_raw);
+        html += '<p class="rationale">' + escapeHtml(displayRationale(d)) + '</p>';
+        html += resultMetaHTML(requestPayload.criteria_name, d.latency_ms);
+        html += jsonBlock("request", requestPayload);
+        html += jsonBlock("response", d);
+      }
+
+      if (name === "sbs") {
+        var a = document.getElementById("sbs-a").value;
+        var b = document.getElementById("sbs-b").value;
+        var res = results[0] || {};
+        var pref = res.score; // -1 = answer_1 better, 0 = tie, 1 = answer_2 better
+        var winner = pref === -1 ? "A" : pref === 1 ? "B" : pref === 0 ? "tie" : null;
+        var prefLabel = winner === "A" ? "Preferred: Answer 1" : winner === "B" ? "Preferred: Answer 2" :
+          winner === "tie" ? "Tie — neither answer preferred" :
+          "Could not determine a preference (raw: " + displayScore(pref, res.score_raw) + ")";
+        html += '<div class="score-badge"><span class="score-value">' + escapeHtml(String(displayScore(pref, res.score_raw))) + '</span>' +
+          '<span class="score-scale-label">' + escapeHtml(prefLabel) + '</span></div>';
+        html += '<div class="sbs-answers">';
+        html += '<div class="sbs-card' + (winner === "A" ? " winner" : "") + '">' + (winner === "A" ? '<span class="winner-badge">Preferred</span>' : '') + '<span class="sbs-label">Answer 1</span><p>' + escapeHtml(a) + '</p></div>';
+        html += '<div class="sbs-card' + (winner === "B" ? " winner" : "") + '">' + (winner === "B" ? '<span class="winner-badge">Preferred</span>' : '') + '<span class="sbs-label">Answer 2</span><p>' + escapeHtml(b) + '</p></div>';
+        html += '</div>';
+        html += '<p class="rationale">' + escapeHtml(displayRationale(res)) + '</p>';
+        html += resultMetaHTML(null, res.latency_ms);
+        html += jsonBlock("request", requestPayload);
+        html += jsonBlock("response", res);
+      }
+
+      if (name === "agent") {
+        var ag = results[0] || {};
+        html += scoreBadgeHTML(ag.score, requestPayload.criteria_rubrics, ag.score_raw);
+        html += '<p class="rationale">' + escapeHtml(displayRationale(ag)) + '</p>';
+        html += resultMetaHTML(requestPayload.criteria_name, ag.latency_ms);
+        html += jsonBlock("request", requestPayload);
+        html += jsonBlock("response", ag);
+      }
+
+      result.innerHTML = html;
+      result.hidden = false;
+      wireCopyButtons(result);
+    }).catch(function (err) {
+      btn.classList.remove("loading");
+      btn.disabled = false;
+      validationEl.className = "validation-status error";
+      validationEl.textContent = "⚠ " + err.message + " — start vLLM and run serve_pollux_demo.py";
+    });
+  }
+
+  document.querySelectorAll("[data-run]").forEach(function (btn) {
+    btn.addEventListener("click", function () { runJudge(btn.dataset.run, btn); });
+  });
+})();
+</script>
