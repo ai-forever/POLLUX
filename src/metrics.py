@@ -6,7 +6,6 @@ Judge response format: [FEEDBACK] some text [RESULT] <score> [END]
 """
 
 import json
-import re
 from pathlib import Path
 from typing import Optional
 
@@ -14,34 +13,29 @@ import datasets
 import pandas as pd
 import typer
 
+from utils.score_utils import (
+    extract_score,
+    is_binary_scale,
+    normalize_score,
+    parse_scale_bounds,
+    parse_scale_values,
+    score_is_within_scale,
+)
+
 RESULTS_DIR = "results"
 TEST_DATASET_ID = "ai-forever/POLLUX-instructions"
 
 app = typer.Typer()
 
-RESULT_PATTERN = re.compile(r"\[RESULT\]\s*([^\s\[]+)\s*\[END\]", re.IGNORECASE | re.DOTALL)
-RUBRIC_LEVELS = re.compile(r"(\d+)\s*:")
-
 
 def count_rubric_levels(rubrics: str) -> int:
     """Number of distinct score levels in rubrics text (e.g. '0: ... 1: ...' -> 2)."""
-    if not rubrics or not isinstance(rubrics, str):
-        return 0
-    return len(set(RUBRIC_LEVELS.findall(rubrics)))
+    return len(set(parse_scale_values(rubrics)))
 
 
 def parse_score(response: str) -> float | None:
     """Extract numeric score from judge response. Returns None on parse error."""
-    if not response or not isinstance(response, str):
-        return None
-    match = RESULT_PATTERN.search(response)
-    if not match:
-        return None
-    raw = match.group(1).strip()
-    try:
-        return float(raw.replace(",", "."))
-    except ValueError:
-        return None
+    return extract_score(response)
 
 
 def run(
@@ -57,6 +51,7 @@ def run(
         raise FileNotFoundError(f"Scores not found: {scores_path}. Run score.py first.")
 
     id2meta: dict[int, str] = {}
+    id2rubrics: dict[tuple[int, str], object] = {}
     binary_criteria: set[tuple[str, str]] = set()
     if dataset_path:
         ds = datasets.load_dataset(dataset_path)[split]
@@ -66,9 +61,12 @@ def run(
         if "meta" in ddf.columns and "criteria" in ddf.columns:
             for _, row in ddf.iterrows():
                 meta = "" if row["meta"] is None else str(row["meta"])
-                for c in row.get("criteria"):
+                prompt_id = row.get("prompt_id")
+                for c in row.get("criteria") or []:
                     name = c.get("criteria_name") or ""
-                    if count_rubric_levels(c.get("rubrics") or "") == 2:
+                    rubrics = c.get("rubrics") or ""
+                    id2rubrics[(prompt_id, name)] = rubrics
+                    if is_binary_scale(rubrics):
                         binary_criteria.add((meta, name))
 
     with open(scores_path, encoding="utf-8") as f:
@@ -87,30 +85,64 @@ def run(
                 prompt_id = meta_val["prompt_id"]
                 meta_key = id2meta.get(prompt_id, "")
                 criteria_name = meta_val.get("criteria_name", "")
+                rubrics = meta_val.get("rubrics")
+                if not rubrics:
+                    rubrics = id2rubrics.get((prompt_id, criteria_name))
             elif meta_val is not None and not isinstance(meta_val, dict):
                 prompt_id = None
                 meta_key = str(meta_val)
                 criteria_name = ""
+                rubrics = None
             else:
                 prompt_id = None
                 meta_key = ""
                 criteria_name = ""
-            is_binary = (meta_key, criteria_name) in binary_criteria
-            parsed.append({"prompt_id": prompt_id, "meta": meta_key, "criteria_name": criteria_name, "score": score, "is_binary": is_binary})
+                rubrics = None
+            if not score_is_within_scale(score, rubrics):
+                continue
+            normalized_score = normalize_score(score, rubrics)
+            if normalized_score is None:
+                continue
+            scale_is_binary = is_binary_scale(rubrics)
+            is_binary = scale_is_binary if parse_scale_bounds(rubrics) is not None else (
+                meta_key,
+                criteria_name,
+            ) in binary_criteria
+            parsed.append(
+                {
+                    "prompt_id": prompt_id,
+                    "meta": meta_key,
+                    "criteria_name": criteria_name,
+                    "score": normalized_score,
+                    "raw_score": score,
+                    "is_binary": is_binary,
+                }
+            )
         elif isinstance(item, str):
             score = parse_score(item)
             if score is not None:
-                parsed.append({"prompt_id": None, "meta": "", "criteria_name": "", "score": score, "is_binary": False})
+                parsed.append(
+                    {
+                        "prompt_id": None,
+                        "meta": "",
+                        "criteria_name": "",
+                        "score": score,
+                        "raw_score": score,
+                        "is_binary": False,
+                    }
+                )
 
     if not parsed:
         raise ValueError("No valid scores parsed from scores.json (expected [RESULT] <score> [END]).")
 
     df = pd.DataFrame(parsed)
     if "prompt_id" in df.columns:
-        binary_ones = df[(df["is_binary"]) & (df["score"] == 1)]["prompt_id"].dropna().unique()
-        if len(binary_ones):
-            df.loc[df["prompt_id"].isin(binary_ones), "score"] = 0
-    df = df.drop(columns=["prompt_id"], errors="ignore")
+        rejected_prompt_ids = df[
+            (df["is_binary"]) & (df["raw_score"] != 0)
+        ]["prompt_id"].dropna().unique()
+        if len(rejected_prompt_ids):
+            df.loc[df["prompt_id"].isin(rejected_prompt_ids), "score"] = 0
+    df = df.drop(columns=["prompt_id", "raw_score"], errors="ignore")
     matrix = df.pivot_table(
         index="criteria_name", columns="meta", values="score", aggfunc="mean", sort=True
     )
@@ -123,9 +155,11 @@ def run(
         if col == "mean_over_meta":
             mean_over_criteria_vals[col] = grand_mean
             continue
-        non_binary_rows = [idx for idx in matrix.index if (col, idx) not in binary_criteria]
-        if non_binary_rows:
-            mean_over_criteria_vals[col] = matrix.loc[non_binary_rows, col].mean()
+        non_binary_col = non_binary_df[non_binary_df["meta"] == col]
+        if len(non_binary_col):
+            mean_over_criteria_vals[col] = (
+                non_binary_col.groupby("criteria_name")["score"].mean().mean()
+            )
         else:
             mean_over_criteria_vals[col] = pd.NA
     matrix.loc["mean_over_criteria"] = mean_over_criteria_vals
@@ -153,7 +187,10 @@ def main(
     )
     typer.echo(f"Saved metrics to {out_file}")
     if grand_mean is not None:
-        typer.echo(f"Grand mean (all criteria excluding binary, all meta): {grand_mean:.4f}")
+        typer.echo(
+            "Grand mean (normalized scores, binary criteria used as gates): "
+            f"{grand_mean:.4f}"
+        )
 
 
 if __name__ == "__main__":

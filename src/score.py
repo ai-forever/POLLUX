@@ -88,7 +88,13 @@ class ScoreRunner:
                     "rubrics": crit.get("rubrics", ""),
                 }
                 samples.append(sample)
-                sample_meta.append({"prompt_id": prompt_id, "criteria_name": sample["criteria_name"]})
+                sample_meta.append(
+                    {
+                        "prompt_id": prompt_id,
+                        "criteria_name": sample["criteria_name"],
+                        "rubrics": sample["rubrics"],
+                    }
+                )
         self._samples = samples
         self._sample_meta = sample_meta
         self._prompts = [format_prompt(s, self.template_path) for s in samples]
