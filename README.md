@@ -63,7 +63,7 @@ Our comprehensive evaluation framework is built on three foundational pillars. F
 
 Score model outputs with POLLUX judges: [demo.ipynb](demo.ipynb)
 
-To get scores for a custom model, run one of the code variants below; answers will be saved in the model's folder under `results/`. Scores are validated against each criterion's rubric and normalized by its maximum before averaging. Binary 0/1 criteria act as gates: only a score of 0 lets the answer retain its remaining scores.
+To get scores for a custom model, run one of the code variants below; answers will be saved in the model's folder under `results/`. Scores are validated against each criterion's rubric and normalized as `(score - min) / (max - min)` before averaging. Binary 0/1 criteria act as gates: only a score of 0 lets the answer retain its remaining scores.
 
 **1. Clone and install**
 

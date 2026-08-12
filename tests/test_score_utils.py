@@ -82,12 +82,19 @@ class ScoreUtilsTest(unittest.TestCase):
         self.assertFalse(is_binary_scale("1: Poor\n5: Excellent"))
         self.assertFalse(is_binary_scale("0: Poor\n1: Average\n2: Excellent"))
 
-    def test_normalizes_score_by_scale_maximum(self):
-        self.assertEqual(normalize_score(4, "1: Poor\n5: Excellent"), 0.8)
+    def test_normalizes_score_by_scale_minimum_and_maximum(self):
+        rubrics = "1: Poor\n3: Average\n5: Excellent"
+        self.assertEqual(normalize_score(1, rubrics), 0.0)
+        self.assertEqual(normalize_score(3, rubrics), 0.5)
+        self.assertEqual(normalize_score(5, rubrics), 1.0)
 
-    def test_rejects_normalization_when_scale_maximum_is_zero(self):
-        with self.assertRaisesRegex(ValueError, "maximum is 0"):
-            normalize_score(0, "-1: Poor\n0: Excellent")
+    def test_normalizes_scale_with_zero_maximum(self):
+        self.assertEqual(normalize_score(-1, "-1: Poor\n0: Excellent"), 0.0)
+        self.assertEqual(normalize_score(0, "-1: Poor\n0: Excellent"), 1.0)
+
+    def test_rejects_normalization_when_scale_has_no_range(self):
+        with self.assertRaisesRegex(ValueError, "no range"):
+            normalize_score(1, "1: Only value")
 
 
 if __name__ == "__main__":

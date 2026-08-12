@@ -73,8 +73,8 @@ class MetricsTest(unittest.TestCase):
 
         matrix, grand_mean = self.run_metrics(dataset_rows, scores)
 
-        self.assertEqual(matrix.loc["quality", "general"], 0.8)
-        self.assertEqual(grand_mean, 0.8)
+        self.assertEqual(matrix.loc["quality", "general"], 0.75)
+        self.assertEqual(grand_mean, 0.75)
 
     def test_binary_zero_allows_normalized_scores(self):
         dataset_rows = [

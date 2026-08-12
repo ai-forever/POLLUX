@@ -112,7 +112,7 @@ def score_is_within_scale(score: Any, rubrics: Any) -> bool:
 
 
 def normalize_score(score: Any, rubrics: Any) -> float | None:
-    """Divide a valid score by the maximum value declared by its rubric."""
+    """Normalize a score to 0–1 using the rubric's minimum and maximum."""
     parsed_score = parse_number(score)
     if parsed_score is None:
         return None
@@ -122,7 +122,8 @@ def normalize_score(score: Any, rubrics: Any) -> float | None:
         # Keep old score files usable when rubric metadata is unavailable.
         return parsed_score
 
-    _, maximum = bounds
-    if maximum == 0:
-        raise ValueError("Cannot normalize a score by a scale whose maximum is 0")
-    return parsed_score / maximum
+    minimum, maximum = bounds
+    scale_range = maximum - minimum
+    if scale_range == 0:
+        raise ValueError("Cannot normalize a score from a scale with no range")
+    return (parsed_score - minimum) / scale_range
